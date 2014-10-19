@@ -1,5 +1,5 @@
 # Config file for this project
-pypy_config.py
+pypy-runner/pypy_config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -55,3 +55,4 @@ docs/_build/
 
 # PyBuilder
 target/
+
