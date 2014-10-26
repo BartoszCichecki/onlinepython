@@ -8,22 +8,36 @@ Created on Wed Oct 15 17:00:37 2014
 """
 Python modules
 """
-#import sys
+import sys
 
 """
 Own created files
 """
 
-primes = []
+def run_test(max_primes=10000):
+    """Prints prime numbers until max_primes
 
-for i in range(1, 10000):
-    prime = True
-    for j in range(2, i):
-        if i % j == 0:
-            #print(str(i)+"\n")
-            #primes.append(i)
-            prime = False
-            break
-    if prime == True:
-        print(str(i)+"\n")
-        primes.append(i)
+    Keyword arguments:
+    max_primes -- Limit maximum number
+    """
+    primes = []
+
+    for i in range(1, max_primes):
+        prime = True
+        for j in range(2, i):
+            if i % j == 0:
+                #print(str(i)+"\n")
+                #primes.append(i)
+                prime = False
+                break
+        if prime == True:
+            print(str(i)+"\n")
+            primes.append(i)
+
+def main(argv):
+    """Run program
+    """
+    run_test(10000)
+
+if __name__ == "__main__":
+    main(sys.argv)
