@@ -5,26 +5,20 @@ Created on Wed Oct 15 16:55:02 2014
 @author: Harri
 """
 
-"""
-Python modules
-"""
-
+#Python modules
+from __future__ import print_function
 import psutil
 import subprocess
 import time
 import sys
 #from pprint import pprint
 
-"""
-Own created files
-"""
+#Own created files
 
 from pypy_config import PYPY_EXEC, SCRIPT_DIR
 from pypy_stats import add_stats
 
-"""
-CONSTANTS
-"""
+#CONSTANTS
 #How often memory usage is checked (seconds)
 CHECK_TIME = 0.05
 

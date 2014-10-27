@@ -5,14 +5,11 @@ Created on Wed Oct 15 17:00:37 2014
 @author: Harri
 """
 
-"""
-Python modules
-"""
+#Python modules
+from __future__ import print_function
 import sys
 
-"""
-Own created files
-"""
+#Own created files
 
 def run_test(max_primes=10000):
     """Prints prime numbers until max_primes
@@ -34,10 +31,10 @@ def run_test(max_primes=10000):
             print(str(i)+"\n")
             primes.append(i)
 
-def main(argv):
+def main():
     """Run program
     """
     run_test(10000)
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

@@ -5,16 +5,12 @@ Created on Sat Oct 25 13:18:10 2014
 @author: Harri
 """
 
-"""
-Python modules
-"""
+#Python modules
 from peewee import SqliteDatabase, DateTimeField, DoubleField, BooleanField
 from peewee import Model
 import datetime
 
-"""
-Own created files
-"""
+#Own created files
 from pypy_config import SCRIPT_DIR
 
 

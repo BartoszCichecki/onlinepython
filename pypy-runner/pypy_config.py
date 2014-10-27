@@ -5,14 +5,10 @@ Created on Sun Oct 19 17:41:45 2014
 @author: Harri
 """
 
-"""
-Python modules
-"""
+#Python modules
 import os
 
-"""
-Own created files
-"""
+#Own created files
 
 #Path to pypy executable
 PYPY_EXEC = 'C:/Users/Harri/Downloads/pypy-2.4.0-win32/pypy.exe'
