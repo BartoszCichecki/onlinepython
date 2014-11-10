@@ -25,7 +25,7 @@ class Index(object):
 
     @cherrypy.expose(alias='doInterviewLogin')
     def do_interview_login(self, username, password):
-        if not db.CheckInterviewCredentials(username,password):
+        if not db.check_interview_credentials(username,password):
             raise cherrypy.HTTPRedirect("/")
 
         cherrypy.session['loggedIn'] = True

@@ -13,8 +13,11 @@ def initialize():
     DB.create_tables([Interview, Exercise, InterviewExercise, Solution], safe=True)
 
 def check_interview_credentials(username, password):
+    print(Interview.select().where(Interview.username == username and Interview.password == password).count() > 0)
     return Interview.select().where(Interview.username == username and Interview.password == password).count() > 0
 
 def add_solution(solution):
     solution.save()
-    
+
+#Add admin login if missing
+#Interview.create(username="admin", password="admin123")
