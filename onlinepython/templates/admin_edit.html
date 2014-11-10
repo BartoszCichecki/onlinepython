@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Online Python - Admin console</title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Welcome to Online Python - Admin console</h1>
+        </div>
+        <div class="content">
+            <form id="editExercise" action="editExercise" method="POST">
+                <label for="description">Description:</label>
+                <input type="text" name="description" id="description" value="{{ description }}" /></br>
+                <label for="timeLimit">Time limit:</label>
+                <input type="number" name="timeLimit" id="timeLimit" value="{{ timelimit }}" /></br>
+                <label for="output">Output:</label>
+                <textarea name="output" id="output">{{ output }}</textarea></br>
+                <input type="hidden" name="id" id="id" value="{{ id }}" />
+                <button type="submit">Submit edit</button>
+            </form>
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>

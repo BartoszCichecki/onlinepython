@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Online Python - Admin console</title>
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="header">
+            <h1>Welcome to Online Python - Admin console</h1>
+        </div>
+        <div class="content">
+            <div class="left">
+                <ul>
+                    {% for exercise in exercises %}
+                      <li><a href="/admin/edit?id={{ exercise.id }}">{{ exercise.description }}</a></li>
+                    {% endfor %}
+                </ul>
+                <form id="createExercise" action="createExercise" method="POST">
+                    <label for="description">Description:</label>
+                    <input type="text" name="description" id="description"/></br>
+                    <label for="timeLimit">Time limit:</label>
+                    <input type="number" name="timeLimit" id="timeLimit"/></br>
+                    <label for="output">Output:</label>
+                    <textarea name="output" id="output"></textarea></br>
+                    <button type="submit">Create a new exercise</button>
+                </form>
+            </div>
+            <div class="right">
+                <ul>
+                    {% for user in users %}
+                      <li>{{ user.username }}</li>
+                    {% endfor %}
+                </ul>
+                <form id="createUser" action="createUser" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username"/></br>
+                    <label for="password">Password:</label>
+                    <input type="text" name="password" id="password"/></br>
+                    <button type="submit">Create a new user</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>

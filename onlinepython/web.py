@@ -8,6 +8,7 @@ Created on Sun Oct  5 20:47:49 2014
 #Python modules
 import cherrypy
 import db
+import os
 from config import ADMIN_USERNAME, ADMIN_PASSWORD
 from jinja2 import Environment, FileSystemLoader
 
@@ -62,8 +63,35 @@ class AdminIndex(object):
     @cherrypy.expose
     def console(self):
         self.verify_session()
+        exercise_list = db.get_exercises()
+        user_list = db.get_users()
+        tmpl = env.get_template('admin_console.html')
+        return tmpl.render(exercises=exercise_list, users=user_list)
 
-        return "OK"
+    @cherrypy.expose(alias='createExercise')
+    def create_exercise(self, description, timeLimit, output):
+        self.verify_session()
+        db.create_exercise(description, timeLimit, output)
+        raise cherrypy.HTTPRedirect("/admin/console")
+        
+    @cherrypy.expose(alias='createUser')
+    def create_exercise(self, username, password):
+        self.verify_session()
+        db.create_user(username, password)
+        raise cherrypy.HTTPRedirect("/admin/console")
+        
+    @cherrypy.expose
+    def edit(self, id):
+        self.verify_session()
+        data = db.get_exercises(id)
+        tmpl = env.get_template('admin_edit.html')
+        return tmpl.render(description=data.description, timelimit=data.time_limit, output=data.expected_output, id=data.id)
+        
+    @cherrypy.expose(alias='editExercise')
+    def edit_exercise(self, id, description, timeLimit, output):
+        self.verify_session()
+        db.edit_exercise(id, description, timeLimit, output)
+        raise cherrypy.HTTPRedirect("/admin/console")
 
     def verify_session(self):
         if 'loggedInAdmin' not in cherrypy.session:
@@ -77,4 +105,14 @@ def initialize():
                             'server.socket_port': 8081,
                             'tools.sessions.on' : True
                            })
-    cherrypy.quickstart(index, '/')
+    conf = {
+         '/': {
+             'tools.sessions.on': True,
+             'tools.staticdir.root': os.path.abspath(os.getcwd())
+         },
+         '/static': {
+             'tools.staticdir.on': True,
+             'tools.staticdir.dir': './public'
+         }
+     }
+    cherrypy.quickstart(index, '/', conf)
