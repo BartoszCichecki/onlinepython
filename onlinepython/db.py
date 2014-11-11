@@ -32,9 +32,12 @@ def get_exercises(ex_id=None):
         return Exercise.select()
     else:
         return Exercise.get(Exercise.id == ex_id)
+<<<<<<< HEAD
         
 def get_user_exercises(user_id=None):
     return Exercise.select().join(InterviewExercise).where(InterviewExercise.id == user_id)
+=======
+>>>>>>> origin/master
 
 def create_user(username, password):
     Interview.create(username=username, password=password)
@@ -45,5 +48,9 @@ def get_users(user_id=None):
     else:
         return Interview.get(Interview.id == user_id)
 
+<<<<<<< HEAD
 def add_user_exercise(user_id, ex_id, add):
+=======
+def add_user_exercise(user_id, ex_id):
+>>>>>>> origin/master
     InterviewExercise.create(interview=user_id, exercise=ex_id)

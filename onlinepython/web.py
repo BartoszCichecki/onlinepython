@@ -75,12 +75,17 @@ class AdminIndex(object):
         raise cherrypy.HTTPRedirect("/admin/console")
         
     @cherrypy.expose(alias='createUser')
+<<<<<<< HEAD
     def create_user(self, username, password):
+=======
+    def create_exercise(self, username, password):
+>>>>>>> origin/master
         self.verify_session()
         db.create_user(username, password)
         raise cherrypy.HTTPRedirect("/admin/console")
         
     @cherrypy.expose
+<<<<<<< HEAD
     def edit_exercise(self, id):
         self.verify_session()
         data = db.get_exercises(id)
@@ -107,6 +112,19 @@ class AdminIndex(object):
         self.verify_session()
         db.add_user_exercise(user_id, ex_id, add)
         raise cherrypy.HTTPRedirect("/admin/console")
+=======
+    def edit(self, id):
+        self.verify_session()
+        data = db.get_exercises(id)
+        tmpl = env.get_template('admin_edit.html')
+        return tmpl.render(description=data.description, timelimit=data.time_limit, output=data.expected_output, id=data.id)
+        
+    @cherrypy.expose(alias='editExercise')
+    def edit_exercise(self, id, description, timeLimit, output):
+        self.verify_session()
+        db.edit_exercise(id, description, timeLimit, output)
+        raise cherrypy.HTTPRedirect("/admin/console")
+>>>>>>> origin/master
 
     def verify_session(self):
         if 'loggedInAdmin' not in cherrypy.session:
