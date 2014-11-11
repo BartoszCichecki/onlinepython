@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Online Python - Admin console</title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Welcome to Online Python - Admin console</h1>
+        </div>
+        <div class="content">
+			{{ user.username }}
+			<br>
+			Open exercises:
+            <ul>
+				{% for exercise in open_list %}
+				  <li>{{ exercise.description }}</li>
+				{% endfor %}
+			</ul>
+			All exercises
+			<ul>
+				{% for exercise in exercise_list %}
+				  <li><a href="/admin/editUser?ex_id={{ exercise.id }}&user_id={{ user.id }}&add=1">{{ exercise.description }}</a></li>
+				{% endfor %}
+			</ul>
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>
