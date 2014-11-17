@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Python - Admin console</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python - Edit interview</h1>
+    </div>
+    <div class="content">
+        <form id="editInterview" action="doEditInterview" method="post">
+            <table>
+                <tr>
+                    <td>
+                        <label for="full_name">Name of interviewee:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="full_name" id="full_name" value="{{ full_name }}" style="width: 200px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="username">Username:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="username" id="username" value="{{ username }}" style="width: 200px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">Password:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="password" id="password" value="{{ password }}" style="width: 200px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Exercises for this interview:
+                    </td>
+                    <td>
+                        {% if not exercises|exists %}
+                            <i>There are no exercises defined.</i>
+                        {% else %}
+                            {% for exercise in exercises %}
+                                <input type="checkbox" name="exerciseIds" id="exercise_{{ exercise.id }}" value="{{ exercise.id }}" {% if exercise.id in selected_exercises %} checked="checked" {% endif %} />
+                                <label for="exercise_{{ exercise.id }}">{{ exercise.friendly_name }}</label>
+                                <br />
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="hidden" name="interview_id" id="interview_id" value="{{ interview_id }}" /> 
+                                    <button type="submit">{% if interview_id %} Save changes {% else %} Create interview {% endif %}</button></td>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="footer"></div>
+  </body>
+</html>

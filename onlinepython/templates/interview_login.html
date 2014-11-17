@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Online Python</title>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Welcome to Online Python</h1>
-        </div>
-        <div class="content">
-            <form id="interviewLogin" action="doInterviewLogin" method="POST">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username"/></br>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password"/></br>
-                <button type="submit">Start test</button>
-            </form>
-        </div>
-        <div class="footer">
-        </div>
-    </body>
+  <head>
+    <title>Online Python</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python</h1>
+    </div>
+    <div class="content">
+      <form id="interviewLogin" action="doInterviewLogin" method="post">
+        <table>
+          <tr>
+            <td>
+              <label for="username">Username:</label>
+            </td>
+            <td>
+              <input type="text" name="username" id="username" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="password">Password:</label>
+            </td>
+            <td>
+              <input type="password" name="password" id="password" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <button type="submit">Login</button>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <div class="footer"></div>
+  </body>
 </html>

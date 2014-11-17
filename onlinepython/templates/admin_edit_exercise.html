@@ -1,25 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Online Python - Admin console</title>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Welcome to Online Python - Admin console</h1>
-        </div>
-        <div class="content">
-            <form id="editExercise" action="editExercise" method="POST">
-                <label for="description">Description:</label>
-                <input type="text" name="description" id="description" value="{{ description }}" /></br>
-                <label for="timeLimit">Time limit:</label>
-                <input type="number" name="timeLimit" id="timeLimit" value="{{ timelimit }}" /></br>
-                <label for="output">Output:</label>
-                <textarea name="output" id="output">{{ output }}</textarea></br>
-                <input type="hidden" name="id" id="id" value="{{ id }}" />
-                <button type="submit">Submit edit</button>
-            </form>
-        </div>
-        <div class="footer">
-        </div>
-    </body>
+  <head>
+    <title>Online Python - Admin console</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python - Edit exercise</h1>
+    </div>
+    <div class="content">
+      <form id="editExercise" action="doEditExercise" method="post">
+        <table>
+          <tr>
+            <td>
+              <label for="friendly_name">Name:</label>
+            </td>
+            <td>
+              <input type="text" name="friendly_name" id="friendly_name" value="{{ friendly_name }}" style="width: 400px" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="description">Description:</label>
+            </td>
+            <td>
+              <textarea type="text" name="description" id="description" style="width: 400px; height: 150px">{{ description }}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="output">Output:</label>
+            </td>
+            <td>
+              <textarea type="text" name="output" id="output" style="width: 400px; height: 150px">{{ output }}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="timeLimit">Time limit:</label>
+            </td>
+            <td>
+            <input type="number" name="timeLimit" id="timeLimit" value="{{ timelimit }}" min="1" style="width: 50px" /> minutes</td>
+          </tr>
+          <tr>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+            <input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
+            <button type="submit">{% if id %} Save changes {% else %} Create exercise {% endif %}</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <div class="footer"></div>
+  </body>
 </html>

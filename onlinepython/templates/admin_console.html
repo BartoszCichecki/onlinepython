@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Online Python - Admin console</title>
-        <link href="/static/style.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="header">
-            <h1>Welcome to Online Python - Admin console</h1>
+  <head>
+    <title>Online Python - Admin console</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python - Admin console</h1>
+    </div>
+    <div class="content">
+      <div class="left">
+        <div class="content-header">
+          <h2>Interviews</h2>
         </div>
-        <div class="content">
-            <div class="left">
-                <ul>
-                    {% for exercise in exercises %}
-                      <li><a href="/admin/edit_exercise?id={{ exercise.id }}">{{ exercise.description }}</a></li>
-                    {% endfor %}
-                </ul>
-                <form id="createExercise" action="createExercise" method="POST">
-                    <label for="description">Description:</label>
-                    <input type="text" name="description" id="description"/></br>
-                    <label for="timeLimit">Time limit:</label>
-                    <input type="number" name="timeLimit" id="timeLimit"/></br>
-                    <label for="output">Output:</label>
-                    <textarea name="output" id="output"></textarea></br>
-                    <button type="submit">Create a new exercise</button>
-                </form>
-            </div>
-            <div class="right">
-                <ul>
-                    {% for user in users %}
-                      <li><a href="/admin/edit_user?id={{ user.id }}">{{ user.username }}</a></li>
-                    {% endfor %}
-                </ul>
-                <form id="createUser" action="createUser" method="POST">
-                    <label for="username">Username:</label>
-                    <input type="text" name="username" id="username"/></br>
-                    <label for="password">Password:</label>
-                    <input type="text" name="password" id="password"/></br>
-                    <button type="submit">Create a new user</button>
-                </form>
-            </div>
-            </div>
+        <div class="content-body">
+            {% if not interviews|exists %}
+               <i>There are no interviews defined.</i>
+            {% else %}
+              <ul style="list-style: circle">
+                {% for interview in interviews %}
+                <li>
+                  {{ interview.full_name }}
+                    {% if not interview.started %}                    
+                        <a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
+                        <a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          <br/>
+          <br/>
+          <a href="/admin/edit_interview?new=1">New interview</a>
         </div>
-        <div class="footer">
+      </div>
+      <div class="right">
+        <div class="content-header">
+          <h2>Exercises</h2>
         </div>
-    </body>
+        <div class="content-body">
+          {% if not exercises|exists %}
+               <i>There are no exercises defined.</i>
+          {% else %}
+              <ul style="list-style: circle">
+                {% for exercise in exercises %}
+                <li>
+                  {{ exercise.friendly_name }} <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
+                </li>
+                {% endfor %}
+              </ul>
+          {% endif %}
+          <br />
+          <br />
+          <a href="/admin/edit_exercise?new=1">New exercise</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer"></div>
+  </body>
 </html>
