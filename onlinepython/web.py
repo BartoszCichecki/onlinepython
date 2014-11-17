@@ -21,6 +21,13 @@ env.filters.update({
     'exists':jinjafilters.exists
 })
 
+def conv_newline(text):
+    text = str(text)
+    text = text.replace('\r\n', '<br />')
+    text = text.replace('\n', '<br />')
+    text = text.replace('\r', '<br />')
+    return text
+
 class Index(object):
 
     @cherrypy.expose()
@@ -64,8 +71,14 @@ class Index(object):
         self.verify_session()
         interview = db.get_interviews(self.get_id())
         exercise = db.get_exercises(exercise_id)
+        data = db.get_interviews(self.get_id())
         result = pyrun.run_file(interview, exercise, script)
-        return str(result)
+        if result['correct']:
+            correct = "Correct"
+        else:
+            correct = "Not correct"
+        tmpl = env.get_template('interview_submit_result.html')
+        return tmpl.render(full_name=data.full_name, correct=correct, output=conv_newline(result['output']), expected_output=conv_newline(result['expected_output']))
 
     def verify_session(self):
         if 'loggedIn' not in cherrypy.session:

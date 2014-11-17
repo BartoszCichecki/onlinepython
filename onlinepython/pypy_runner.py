@@ -26,7 +26,7 @@ def run_file(interview, exercise, submitted_code):
 
     expected_output = exercise.expected_output
 
-    correct = check_output(script_filename, expected_output)
+    result = check_output(script_filename, expected_output)
 
 #    if correct:
     execution_time, memory_usage = measure_usage(script_filename)
@@ -35,31 +35,38 @@ def run_file(interview, exercise, submitted_code):
     solution.interview = interview
     solution.exercise = exercise
     solution.submitted_code = submitted_code
-    solution.correct = correct
+    solution.correct = result['correct']
     solution.execution_time = execution_time
     solution.memory_usage = memory_usage
     db.add_solution(solution)
-    return correct
+    result['expected_output'] = expected_output
+    return result
 
 def check_output(script_file, expected_output):
     proc = subprocess.Popen(PYPY_EXEC + ' "' + script_file + '"',
                             stdout=subprocess.PIPE)
     output, error = proc.communicate()
+    result = {}
+    result['output'] = output
+    result['correct'] = True
 
     if error is not None:
-        return False
+         result['correct'] = False
+         return result
 
     output_lines = [str(line.strip()) for line
                     in output.splitlines() if len(line) > 0]
     expected_output_lines = [str(line.strip()) for line
                              in expected_output.split('\n') if len(line) > 0]
     if len(output_lines) != len(expected_output_lines):
-        return False
+        result['correct'] = False
+        return result
     for i in range(len(output_lines)):
         if expected_output_lines[i] != output_lines[i]:
-            return False
+            result['correct'] = False
+            return result
 
-    return True
+    return result
 
 def measure_usage(script_file):
     start_time = time.time()

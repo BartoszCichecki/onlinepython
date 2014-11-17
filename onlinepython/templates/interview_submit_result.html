@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Python - Home</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python {{ full_name }}</h1>
+    </div>
+    <div class="content">
+		<table>
+			<tr>
+				<td colspan="2">
+					Result for output: {{ correct }}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Your script output:
+				</td>
+				<td>
+					Expected output:
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{{ output }}
+				</td>
+				<td>
+					{{ expected_output }}
+				</td>
+			</tr>
+		</table>
+    </div>
+    <div class="footer"></div>
+  </body>
+</html>
