@@ -11,6 +11,7 @@ import db
 import os
 from config import ADMIN_USERNAME, ADMIN_PASSWORD
 from jinja2 import Environment, FileSystemLoader
+import pypy_runner as pyrun
 
 #Own created modules
 import jinjafilters
@@ -22,7 +23,7 @@ env.filters.update({
 
 class Index(object):
 
-    @cherrypy.expose
+    @cherrypy.expose()
     def index(self):
         if 'loggedIn' in cherrypy.session:
             raise cherrypy.HTTPRedirect("/interview")
@@ -32,21 +33,46 @@ class Index(object):
 
     @cherrypy.expose(alias='doInterviewLogin')
     def do_interview_login(self, username, password):
-        if not db.check_interview_credentials(username,password):
+        db.check_interview_credentials(username, password)
+        if not db.check_interview_credentials(username, password):
             raise cherrypy.HTTPRedirect("/")
 
         cherrypy.session['loggedIn'] = True
+        cherrypy.session['user_id'] = db.get_interview_id(username)
         raise cherrypy.HTTPRedirect("/interview")
 
     @cherrypy.expose
     def interview(self):
         self.verify_session()
+        tmpl = env.get_template('interview_home.html')
+        exercise_list = db.get_exercises()
+        data = db.get_interviews(self.get_id())
+        selected_exercises = db.get_interview_exercise_ids(self.get_id())
+        if len(selected_exercises) > 0:
+            return tmpl.render(full_name=data.full_name, username=data.username, exercises=exercise_list, selected_exercises=selected_exercises)
+        return tmpl.render(full_name=data.full_name, username=data.username)
+    
+    @cherrypy.expose
+    def submit(self, ex_id):
+        self.verify_session()
+        tmpl = env.get_template('interview_submit.html')
+        data = db.get_interviews(self.get_id())
+        return tmpl.render(full_name=data.full_name, exercise_id=ex_id)
 
-        return "OK"
+    @cherrypy.expose(alias='submitExercise')
+    def submit_exercise(self, exercise_id, script):
+        self.verify_session()
+        interview = db.get_interviews(self.get_id())
+        exercise = db.get_exercises(exercise_id)
+        result = pyrun.run_file(interview, exercise, script)
+        return str(result)
 
     def verify_session(self):
         if 'loggedIn' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/")
+    
+    def get_id(self):
+        return 'user_id' in cherrypy.session
 
 class AdminIndex(object):
 
@@ -143,10 +169,11 @@ class AdminIndex(object):
 def initialize():
     index = Index()
     index.admin = AdminIndex()
-
     cherrypy.config.update({'server.socket_host': '127.0.0.1',
                             'server.socket_port': 8081,
-                            'tools.sessions.on' : True
+                            'tools.sessions.on' : True,
+                            'tools.encode.on' : True,
+                            'tools.encode.encoding' : 'utf-8'
                            })
     conf = {
          '/': {

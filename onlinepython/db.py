@@ -18,6 +18,10 @@ def initialize():
 def check_interview_credentials(username, password):
     return Interview.select().where(Interview.username == username and Interview.password == password and Interview.deleted == False).count() > 0
 
+def get_interview_id(username):
+    interview = Interview.get(Interview.username == username and Interview.deleted == False)
+    return interview.id
+
 def add_solution(solution):
     solution.save()
 
@@ -25,7 +29,10 @@ def get_exercises(exercise_id=None):
     if exercise_id == None:
         return Exercise.select().where(Exercise.deleted == False)
     else:
-        return Exercise.get(Exercise.id == exercise_id and Exercise.deleted == False)
+        exercise = Exercise.get(Exercise.id == exercise_id)
+        if exercise.deleted == True:
+            return False
+        return exercise
 
 def create_exercise(friendly_name="", description="", expected_output="", time_limit=0):
     try:
@@ -95,7 +102,9 @@ def edit_interview(interview_id=None, full_name="", username="", password="", ex
             query.execute()
 
             for exerciseId in exerciseIds:
-                exercise = Exercise.get(Exercise.id == exerciseId and Exercise.deleted == False)
+                exercise = Exercise.get(Exercise.id == exerciseId)
+                if exercise.deleted == True:
+                    continue
                 InterviewExercise.create(interview=interview, exercise=exercise)
         return True
     except IntegrityError:

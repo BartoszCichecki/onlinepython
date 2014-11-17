@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Python - Submit</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Submit your solution - {{ friendly_name }}</h1>
+    </div>
+    <div class="content">
+	  <form id="submitExercise" action="submitExercise" method="post">
+        <table>
+          <tr>
+            <td>
+              <label for="script">Script:</label>
+            </td>
+            <td>
+              <textarea type="text" name="script" id="script" style="width: 400px; height: 150px"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+            <input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
+            <button type="submit">Submit exercise</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <div class="footer"></div>
+  </body>
+</html>
