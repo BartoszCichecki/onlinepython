@@ -18,12 +18,18 @@ def initialize():
 def check_interview_credentials(username, password):
     return Interview.select().where(Interview.username == username and Interview.password == password and Interview.deleted == False).count() > 0
 
-def get_interview_id(username):
-    interview = Interview.get(Interview.username == username and Interview.deleted == False)
-    return interview.id
-
 def add_solution(solution):
     solution.save()
+
+def get_solutions(exercise_id=None, solution_id=None):
+    if solution_id != None:
+        solutions = Solution.select().where(Solution.id == solution_id and Solution.deleted == False)
+    if exercise_id != None:
+        solutions = Solution.select().where(Solution.exercise == exercise_id)
+        solutions = [solution for solution in solutions if solution.deleted == False]
+    else:
+        return False
+    return solutions
 
 def get_exercises(exercise_id=None):
     if exercise_id == None:
@@ -55,26 +61,30 @@ def edit_exercise(exercise_id=None, friendly_name="", description="", expected_o
         return False
 
 def delete_exercise(exercise_id):
-     if exercise_id == None:
+    if exercise_id == None:
         return False
 
-     try:
-         with DB.transaction():
-             query = Exercise.update(deleted=True).where(Exercise.id == exercise_id)
-             query.execute()
-             return True
-     except IntegrityError:
-         return False
+    try:
+        with DB.transaction():
+            query = Exercise.update(deleted=True).where(Exercise.id == exercise_id)
+            query.execute()
+            return True
+    except IntegrityError:
+        return False
+
+def get_interview_exercise_ids(interview_id):
+    matches = Exercise.select().join(InterviewExercise).join(Interview).where(Exercise.deleted == False and Interview.id == interview_id and Interview.deleted == False)
+    return [match.id for match in matches]
+
+def get_interview_id(username):
+    interview = Interview.get(Interview.username == username and Interview.deleted == False)
+    return interview.id
 
 def get_interviews(interview_id=None):
     if interview_id == None:
         return Interview.select().where(Interview.deleted == False)
     else:
         return Interview.get(Interview.id == interview_id and Interview.deleted == False)
-
-def get_interview_exercise_ids(interview_id):
-        matches = Exercise.select().join(InterviewExercise).join(Interview).where(Exercise.deleted == False and Interview.id == interview_id and Interview.deleted == False)
-        return [match.id for match in matches]
 
 def create_interview(full_name="", username="", password="", exerciseIds=[]):
     try:
@@ -111,13 +121,13 @@ def edit_interview(interview_id=None, full_name="", username="", password="", ex
         return False
 
 def delete_interview(interview_id):
-     if interview_id == None:
+    if interview_id == None:
         return False
 
-     try:
-         with DB.transaction():
-             query = Interview.update(deleted=True).where(Interview.id == interview_id)
-             query.execute()
-             return True
-     except IntegrityError:
-         return False
+    try:
+        with DB.transaction():
+            query = Interview.update(deleted=True).where(Interview.id == interview_id)
+            query.execute()
+            return True
+    except IntegrityError:
+        return False

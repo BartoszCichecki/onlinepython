@@ -21,7 +21,7 @@
                 {% for interview in interviews %}
                 <li>
                   {{ interview.full_name }}
-                    {% if not interview.started %}                    
+                    {% if not interview.started %}
                         <a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
                         <a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
                     {% endif %}
@@ -45,7 +45,7 @@
               <ul style="list-style: circle">
                 {% for exercise in exercises %}
                 <li>
-                  {{ exercise.friendly_name }} <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
+                  {{ exercise.friendly_name }} <a href="/admin/info_exercise?exercise_id={{ exercise.id }}">Info</a> <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
                 </li>
                 {% endfor %}
               </ul>

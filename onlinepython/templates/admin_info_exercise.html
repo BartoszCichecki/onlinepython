@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Python - Admin console</title>
+    <link href="/static/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to Online Python - Edit exercise</h1>
+    </div>
+    <div class="content">
+      <form id="editExercise" action="doEditExercise" method="post">
+        <table>
+          <tr>
+            <td>
+              Name:
+            </td>
+            <td>
+              {{ friendly_name }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Submits:
+            </td>
+            <td>
+              {{ submits }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Correct submits:
+            </td>
+            <td>
+              {{ correct_percent }}%
+            </td>
+          </tr>
+          <tr>
+        </table>
+      </form>
+    </div>
+    <div class="footer"></div>
+  </body>
+</html>

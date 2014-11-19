@@ -21,7 +21,7 @@ env.filters.update({
     'exists':jinjafilters.exists
 })
 
-def conv_newline(text):
+def nl2br(text):
     text = str(text)
     text = text.replace('\r\n', '<br />')
     text = text.replace('\n', '<br />')
@@ -58,7 +58,7 @@ class Index(object):
         if len(selected_exercises) > 0:
             return tmpl.render(full_name=data.full_name, username=data.username, exercises=exercise_list, selected_exercises=selected_exercises)
         return tmpl.render(full_name=data.full_name, username=data.username)
-    
+
     @cherrypy.expose
     def submit(self, ex_id):
         self.verify_session()
@@ -78,12 +78,12 @@ class Index(object):
         else:
             correct = "Not correct"
         tmpl = env.get_template('interview_submit_result.html')
-        return tmpl.render(full_name=data.full_name, correct=correct, output=conv_newline(result['output']), expected_output=conv_newline(result['expected_output']))
+        return tmpl.render(full_name=data.full_name, correct=correct, used_time=result['execution_time'], used_mem=result['memory_usage'], output=nl2br(result['output']), expected_output=nl2br(result['expected_output']))
 
     def verify_session(self):
         if 'loggedIn' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/")
-    
+
     def get_id(self):
         return 'user_id' in cherrypy.session
 
@@ -114,12 +114,30 @@ class AdminIndex(object):
         return tmpl.render(exercises=exercise_list, interviews=interview_list)
 
     @cherrypy.expose
+    def info_exercise(self, exercise_id=None):
+        self.verify_session()
+        tmpl = env.get_template('admin_info_exercise.html')
+        if exercise_id:
+            solutions = db.get_solutions(exercise_id=exercise_id)
+            data = db.get_exercises(exercise_id)
+            submits = len([x for x in solutions])
+            corrects = len([x for x in solutions if x.correct == True]) * 1.0
+            no_corrects = submits - corrects
+            if submits == 0:
+                correct_percent = "No submitted solutions"
+            else:
+                correct_percent = corrects / submits * 100.0
+            return tmpl.render(friendly_name=data.friendly_name, description=data.description, output=data.expected_output, timelimit=data.time_limit, exercise_id=data.id,
+                               correct_percent=correct_percent, submits=submits)
+        raise cherrypy.HTTPRedirect("/admin/console")
+
+    @cherrypy.expose
     def edit_exercise(self, exercise_id=None, new=None):
         self.verify_session()
         tmpl = env.get_template('admin_edit_exercise.html')
         if exercise_id:
             data = db.get_exercises(exercise_id)
-            return tmpl.render(friendly_name = data.friendly_name, description=data.description, output=data.expected_output, timelimit=data.time_limit, exercise_id=data.id)
+            return tmpl.render(friendly_name=data.friendly_name, description=data.description, output=data.expected_output, timelimit=data.time_limit, exercise_id=data.id)
         return tmpl.render()
 
     @cherrypy.expose
@@ -151,7 +169,7 @@ class AdminIndex(object):
         if interview_id:
             data = db.get_interviews(interview_id)
             selected_exercises = db.get_interview_exercise_ids(interview_id)
-            return tmpl.render(full_name=data.full_name, username=data.username, password=data.password, exercises=exercise_list, selected_exercises=selected_exercises, interview_id = data.id)
+            return tmpl.render(full_name=data.full_name, username=data.username, password=data.password, exercises=exercise_list, selected_exercises=selected_exercises, interview_id=data.id)
         return tmpl.render(exercises=exercise_list)
 
     @cherrypy.expose

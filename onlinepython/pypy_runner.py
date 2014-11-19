@@ -30,6 +30,8 @@ def run_file(interview, exercise, submitted_code):
 
 #    if correct:
     execution_time, memory_usage = measure_usage(script_filename)
+    result['execution_time'] = execution_time
+    result['memory_usage'] = memory_usage
 
     solution = Solution()
     solution.interview = interview
@@ -51,8 +53,8 @@ def check_output(script_file, expected_output):
     result['correct'] = True
 
     if error is not None:
-         result['correct'] = False
-         return result
+        result['correct'] = False
+        return result
 
     output_lines = [str(line.strip()) for line
                     in output.splitlines() if len(line) > 0]

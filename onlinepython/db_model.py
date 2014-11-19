@@ -21,14 +21,14 @@ class Interview(BaseModel):
     username = CharField(max_length=100, null=False)
     password = CharField(max_length=10, null=False)
     started = BooleanField(default=False)
-    deleted = BooleanField(default = False)
+    deleted = BooleanField(default=False)
 
 class Exercise(BaseModel):
     friendly_name = CharField(max_length=50, null=False)
     description = TextField(null=False)
     time_limit = IntegerField(null=False)
     expected_output = TextField(null=False)
-    deleted = BooleanField(default = False)
+    deleted = BooleanField(default=False)
 
 class InterviewExercise(BaseModel):
     interview = ForeignKeyField(Interview)
@@ -42,4 +42,4 @@ class Solution(BaseModel):
     correct = BooleanField(null=False)
     execution_time = DoubleField()
     memory_usage = DoubleField()
-    deleted = BooleanField(default = False)
+    deleted = BooleanField(default=False)
