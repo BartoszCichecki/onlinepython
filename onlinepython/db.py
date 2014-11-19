@@ -7,6 +7,7 @@ Created on Sun Oct  5 19:11:58 2014
 
 #Python modules
 from peewee import IntegrityError
+import matplotlib.pyplot as plt
 
 #Own created modules
 from db_model import DB, Interview, Exercise, InterviewExercise, Solution
@@ -20,15 +21,31 @@ def check_interview_credentials(username, password):
 
 def add_solution(solution):
     solution.save()
+    solutions = get_solutions()
+    mb = 1024*1024*1.0
+    
+    all_exercises = set([solution.exercise.id for solution in solutions])
+    
+    for exercise_id in all_exercises:
+        x = [solution.memory_usage/mb for solution in solutions if solution.exercise.id == exercise_id]
+        #print(x)
+        for item in x:
+            print(item)
+        xbins=min(len(x), 20)
+        plt.hist(x, bins=xbins, color='blue')
+        plt.savefig("public/plot/plot_"+str(exercise_id)+".png")
+        plt.close()
+#        plt.show()
 
 def get_solutions(exercise_id=None, solution_id=None):
     if solution_id != None:
         solutions = Solution.select().where(Solution.id == solution_id and Solution.deleted == False)
-    if exercise_id != None:
+    elif exercise_id != None:
         solutions = Solution.select().where(Solution.exercise == exercise_id)
         solutions = [solution for solution in solutions if solution.deleted == False]
     else:
-        return False
+        solutions = Solution.select()
+        solutions = [solution for solution in solutions if solution.deleted == False]
     return solutions
 
 def get_exercises(exercise_id=None):
