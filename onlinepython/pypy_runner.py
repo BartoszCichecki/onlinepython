@@ -45,8 +45,10 @@ def run_file(interview, exercise, submitted_code):
     return result
 
 def check_output(script_file, expected_output):
-    proc = subprocess.Popen(PYPY_EXEC + ' "' + script_file + '"',
-                            stdout=subprocess.PIPE)
+    exec_string = [cmd for cmd in PYPY_EXEC]
+    exec_string.append(script_file)
+    print(exec_string)
+    proc = subprocess.Popen(exec_string, stdout=subprocess.PIPE)
     output, error = proc.communicate()
     result = {}
     result['output'] = output
@@ -71,8 +73,11 @@ def check_output(script_file, expected_output):
     return result
 
 def measure_usage(script_file):
+    exec_string = [cmd for cmd in PYPY_EXEC]
+    exec_string.append(script_file)
+    
     start_time = time.time()
-    proc = subprocess.Popen(PYPY_EXEC + ' "' + script_file + '"')
+    proc = subprocess.Popen(exec_string)
 
     memory_usage = []
     try:

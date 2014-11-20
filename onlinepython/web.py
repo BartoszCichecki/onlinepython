@@ -85,7 +85,7 @@ class Index(object):
             raise cherrypy.HTTPRedirect("/")
 
     def get_id(self):
-        return 'user_id' in cherrypy.session
+        return cherrypy.session['user_id']
 
 class AdminIndex(object):
 
@@ -200,7 +200,7 @@ class AdminIndex(object):
 def initialize():
     index = Index()
     index.admin = AdminIndex()
-    cherrypy.config.update({'server.socket_host': '127.0.0.1',
+    cherrypy.config.update({'server.socket_host': '0.0.0.0',
                             'server.socket_port': 8081,
                             'tools.sessions.on' : True,
                             'tools.encode.on' : True,

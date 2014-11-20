@@ -7,6 +7,8 @@ Created on Sun Oct  5 19:11:58 2014
 
 #Python modules
 from peewee import IntegrityError
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 #Own created modules
@@ -17,7 +19,7 @@ def initialize():
     DB.create_tables([Interview, Exercise, InterviewExercise, Solution], safe=True)
 
 def check_interview_credentials(username, password):
-    return Interview.select().where(Interview.username == username and Interview.password == password and Interview.deleted == False).count() > 0
+    return Interview.select().where((Interview.username == username) & (Interview.password == password) & (Interview.deleted == False)).count() > 0
 
 def add_solution(solution):
     solution.save()
@@ -28,18 +30,14 @@ def add_solution(solution):
     
     for exercise_id in all_exercises:
         x = [solution.memory_usage/mb for solution in solutions if solution.exercise.id == exercise_id]
-        #print(x)
-        for item in x:
-            print(item)
         xbins=min(len(x), 20)
         plt.hist(x, bins=xbins, color='blue')
         plt.savefig("public/plot/plot_"+str(exercise_id)+".png")
         plt.close()
-#        plt.show()
 
 def get_solutions(exercise_id=None, solution_id=None):
     if solution_id != None:
-        solutions = Solution.select().where(Solution.id == solution_id and Solution.deleted == False)
+        solutions = Solution.select().where((Solution.id == solution_id) & (Solution.deleted == False))
     elif exercise_id != None:
         solutions = Solution.select().where(Solution.exercise == exercise_id)
         solutions = [solution for solution in solutions if solution.deleted == False]
@@ -52,9 +50,7 @@ def get_exercises(exercise_id=None):
     if exercise_id == None:
         return Exercise.select().where(Exercise.deleted == False)
     else:
-        exercise = Exercise.get(Exercise.id == exercise_id)
-        if exercise.deleted == True:
-            return False
+        exercise = Exercise.get((Exercise.id == exercise_id) & (Exercise.deleted == False))
         return exercise
 
 def create_exercise(friendly_name="", description="", expected_output="", time_limit=0):
@@ -90,18 +86,18 @@ def delete_exercise(exercise_id):
         return False
 
 def get_interview_exercise_ids(interview_id):
-    matches = Exercise.select().join(InterviewExercise).join(Interview).where(Exercise.deleted == False and Interview.id == interview_id and Interview.deleted == False)
+    matches = Exercise.select().join(InterviewExercise).join(Interview).where((Exercise.deleted == False) & (Interview.id == interview_id) & (Interview.deleted == False))
     return [match.id for match in matches]
 
 def get_interview_id(username):
-    interview = Interview.get(Interview.username == username and Interview.deleted == False)
+    interview = Interview.select().where((Interview.username == username) & (Interview.deleted == False)).limit(1).get()
     return interview.id
 
 def get_interviews(interview_id=None):
     if interview_id == None:
         return Interview.select().where(Interview.deleted == False)
     else:
-        return Interview.get(Interview.id == interview_id and Interview.deleted == False)
+        return Interview.get((Interview.id == interview_id) & (Interview.deleted == False))
 
 def create_interview(full_name="", username="", password="", exerciseIds=[]):
     try:
@@ -109,7 +105,7 @@ def create_interview(full_name="", username="", password="", exerciseIds=[]):
             interview = Interview.create(full_name=full_name, username=username, password=password)
 
             for exerciseId in exerciseIds:
-                exercise = Exercise.select().where(Exercise.id == exerciseId and Exercise.deleted == False).limit(1).get()
+                exercise = Exercise.select().where((Exercise.id == exerciseId) & (Exercise.deleted == False)).limit(1).get()
                 InterviewExercise.create(interview=interview, exercise=exercise)
         return True
     except IntegrityError:
@@ -124,7 +120,7 @@ def edit_interview(interview_id=None, full_name="", username="", password="", ex
             query = Interview.update(full_name=full_name, username=username, password=password).where(Interview == interview_id)
             query.execute()
 
-            interview = Interview.select().where(Interview.id == interview_id and Interview.deleted == False).limit(1).get()
+            interview = Interview.select().where((Interview.id == interview_id) & (Interview.deleted == False)).limit(1).get()
             query = InterviewExercise.delete().where(InterviewExercise.interview == interview)
             query.execute()
 
