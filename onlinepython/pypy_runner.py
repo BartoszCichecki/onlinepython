@@ -47,7 +47,7 @@ def run_file(interview, exercise, submitted_code):
 def check_output(script_file, expected_output):
     exec_string = [cmd for cmd in PYPY_EXEC]
     exec_string.append(script_file)
-    print(exec_string)
+
     proc = subprocess.Popen(exec_string, stdout=subprocess.PIPE)
     output, error = proc.communicate()
     result = {}
