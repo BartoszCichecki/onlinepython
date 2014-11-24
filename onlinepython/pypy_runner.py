@@ -52,15 +52,12 @@ def run_file(interview, exercise, submitted_code):
     return result
 
 def check_output(script_file, expected_output):
-<<<<<<< HEAD
     """Check output of a python script.
 
     Keyword arguments:
     script_file -- Filename of python script
     expected_output -- Output to compare to
     """
-=======
->>>>>>> origin/master
     exec_string = [cmd for cmd in PYPY_EXEC]
     exec_string.append(script_file)
 
@@ -89,7 +86,6 @@ def check_output(script_file, expected_output):
     return result
 
 def measure_usage(script_file):
-<<<<<<< HEAD
     """Check resource usage of a python script.
 
     Keyword arguments:
@@ -98,11 +94,6 @@ def measure_usage(script_file):
     exec_string = [cmd for cmd in PYPY_EXEC]
     exec_string.append(script_file)
 
-=======
-    exec_string = [cmd for cmd in PYPY_EXEC]
-    exec_string.append(script_file)
-    
->>>>>>> origin/master
     start_time = time.time()
     proc = subprocess.Popen(exec_string)
 
