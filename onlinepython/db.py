@@ -22,6 +22,7 @@ def initialize():
                      safe=True)
 
 def check_interview_credentials(username, password):
+<<<<<<< HEAD
     """Checks user credentials.
 
     Keyword arguments:
@@ -34,6 +35,9 @@ def check_interview_credentials(username, password):
     return Interview.select().where((Interview.username == username) &
                                     (Interview.password == password) &
                                     (Interview.deleted == False)).count() > 0
+=======
+    return Interview.select().where((Interview.username == username) & (Interview.password == password) & (Interview.deleted == False)).count() > 0
+>>>>>>> origin/master
 
 def add_solution(solution):
     """Save solution to database.
@@ -48,10 +52,16 @@ def add_solution(solution):
     all_exercises = set([solution.exercise.id for solution in solutions])
 
     for exercise_id in all_exercises:
+<<<<<<< HEAD
         mem_usage = [solution.memory_usage/megabyte for solution in solutions
                 if solution.exercise.id == exercise_id]
         xbins = min(len(mem_usage), 20)
         plt.hist(mem_usage, bins=xbins, color='blue')
+=======
+        x = [solution.memory_usage/mb for solution in solutions if solution.exercise.id == exercise_id]
+        xbins=min(len(x), 20)
+        plt.hist(x, bins=xbins, color='blue')
+>>>>>>> origin/master
         plt.savefig("public/plot/plot_"+str(exercise_id)+".png")
         plt.close()
 
@@ -66,8 +76,12 @@ def get_solutions(exercise_id=None, solution_id=None):
     Pointer of solution results
     """
     if solution_id != None:
+<<<<<<< HEAD
         solutions = Solution.select().where((Solution.id == solution_id) &
             (Solution.deleted == False))
+=======
+        solutions = Solution.select().where((Solution.id == solution_id) & (Solution.deleted == False))
+>>>>>>> origin/master
     elif exercise_id != None:
         solutions = Solution.select().where(Solution.exercise == exercise_id)
         solutions = [solution for solution in solutions
@@ -90,8 +104,12 @@ def get_exercises(exercise_id=None):
     if exercise_id == None:
         return Exercise.select().where(Exercise.deleted == False)
     else:
+<<<<<<< HEAD
         exercise = Exercise.get((Exercise.id == exercise_id) &
             (Exercise.deleted == False))
+=======
+        exercise = Exercise.get((Exercise.id == exercise_id) & (Exercise.deleted == False))
+>>>>>>> origin/master
         return exercise
 
 def create_exercise(friendly_name="", description="", expected_output="",
@@ -168,6 +186,7 @@ def delete_exercise(exercise_id):
         return False
 
 def get_interview_exercise_ids(interview_id):
+<<<<<<< HEAD
     """Gets interviewee's exercises.
 
     Keyword arguments:
@@ -193,6 +212,13 @@ def get_interview_id(username):
     """
     interview = Interview.select().where((Interview.username == username) &
                                 (Interview.deleted == False)).limit(1).get()
+=======
+    matches = Exercise.select().join(InterviewExercise).join(Interview).where((Exercise.deleted == False) & (Interview.id == interview_id) & (Interview.deleted == False))
+    return [match.id for match in matches]
+
+def get_interview_id(username):
+    interview = Interview.select().where((Interview.username == username) & (Interview.deleted == False)).limit(1).get()
+>>>>>>> origin/master
     return interview.id
 
 def get_interviews(interview_id=None):
@@ -207,8 +233,12 @@ def get_interviews(interview_id=None):
     if interview_id == None:
         return Interview.select().where(Interview.deleted == False)
     else:
+<<<<<<< HEAD
         return Interview.get((Interview.id == interview_id) &
                             (Interview.deleted == False))
+=======
+        return Interview.get((Interview.id == interview_id) & (Interview.deleted == False))
+>>>>>>> origin/master
 
 def create_interview(full_name="", username="", password="", exercise_ids=[]):
     """Creates interview.
@@ -227,10 +257,15 @@ def create_interview(full_name="", username="", password="", exercise_ids=[]):
             interview = Interview.create(full_name=full_name,
                                          username=username, password=password)
 
+<<<<<<< HEAD
             for exercise_id in exercise_ids:
                 exercise = Exercise.select().where(
                     (Exercise.id == exercise_id) &
                     (Exercise.deleted == False)).limit(1).get()
+=======
+            for exerciseId in exerciseIds:
+                exercise = Exercise.select().where((Exercise.id == exerciseId) & (Exercise.deleted == False)).limit(1).get()
+>>>>>>> origin/master
                 InterviewExercise.create(interview=interview, exercise=exercise)
         return True
     except IntegrityError:
@@ -260,11 +295,16 @@ def edit_interview(interview_id=None, full_name="", username="", password="",
                                          Interview == interview_id)
             query.execute()
 
+<<<<<<< HEAD
             interview = Interview.select().where(
                 (Interview.id == interview_id) &
                 (Interview.deleted == False)).limit(1).get()
             query = InterviewExercise.delete().where(
                     InterviewExercise.interview == interview)
+=======
+            interview = Interview.select().where((Interview.id == interview_id) & (Interview.deleted == False)).limit(1).get()
+            query = InterviewExercise.delete().where(InterviewExercise.interview == interview)
+>>>>>>> origin/master
             query.execute()
 
             for exercise_id in exercise_ids:
