@@ -17,6 +17,13 @@ from config import PYPY_EXEC, PYPY_CHECK_TIME
 from db_model import Solution
 
 def run_file(interview, exercise, submitted_code):
+    """Run a python script.
+
+    Keyword arguments:
+    interview -- Interview object
+    exercise -- Exercise object
+    submitted_code -- The script to run (string)
+    """
     temp_dir_path = tempfile.mkdtemp(prefix='pyinterviews_')
 
     script_file = open(temp_dir_path + os.sep + 'script.py', 'w')
@@ -45,8 +52,16 @@ def run_file(interview, exercise, submitted_code):
     return result
 
 def check_output(script_file, expected_output):
-    proc = subprocess.Popen(PYPY_EXEC + ' "' + script_file + '"',
-                            stdout=subprocess.PIPE)
+    """Check output of a python script.
+
+    Keyword arguments:
+    script_file -- Filename of python script
+    expected_output -- Output to compare to
+    """
+    exec_string = [cmd for cmd in PYPY_EXEC]
+    exec_string.append(script_file)
+
+    proc = subprocess.Popen(exec_string, stdout=subprocess.PIPE)
     output, error = proc.communicate()
     result = {}
     result['output'] = output
@@ -71,8 +86,16 @@ def check_output(script_file, expected_output):
     return result
 
 def measure_usage(script_file):
+    """Check resource usage of a python script.
+
+    Keyword arguments:
+    script_file -- Filename of python script
+    """
+    exec_string = [cmd for cmd in PYPY_EXEC]
+    exec_string.append(script_file)
+
     start_time = time.time()
-    proc = subprocess.Popen(PYPY_EXEC + ' "' + script_file + '"')
+    proc = subprocess.Popen(exec_string)
 
     memory_usage = []
     try:

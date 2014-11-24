@@ -7,7 +7,8 @@ Created on Sun Oct  5 20:22:11 2014
 
 #Python modules
 import datetime
-from peewee import SqliteDatabase, Model, DateTimeField, CharField, TextField, IntegerField, DoubleField, BooleanField, ForeignKeyField
+from peewee import SqliteDatabase, Model, DateTimeField, CharField, TextField
+from peewee import IntegerField, DoubleField, BooleanField, ForeignKeyField
 
 DB = SqliteDatabase('interviews.db', threadlocals=True)
 

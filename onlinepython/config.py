@@ -5,7 +5,10 @@ Created on Sun Oct 19 17:41:45 2014
 """
 
 #Pypy settings
-PYPY_EXEC = 'pypy-2.4.0-win32/pypy.exe'
+#Windows
+PYPY_EXEC = ['pypy-2.4.0-win32/pypy.exe']
+#Linux
+#PYPY_EXEC = ['/usr/bin/pypy-sandbox', '--timeout=600', '--tmp=/tmp']
 PYPY_CHECK_TIME = 0.05
 
 #Admin credentials
