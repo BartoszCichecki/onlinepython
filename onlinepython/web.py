@@ -16,8 +16,8 @@ import pypy_runner as pyrun
 #Own created modules
 import jinjafilters
 
-env = Environment(loader=FileSystemLoader('templates'))
-env.filters.update({
+ENV = Environment(loader=FileSystemLoader('templates'))
+ENV.filters.update({
     'exists':jinjafilters.exists
 })
 
@@ -37,18 +37,25 @@ def nl2br(text):
     return text
 
 class Index(object):
-    """User pages.
-    """
+    """ User pages. """
+    
     @cherrypy.expose()
     def index(self):
+        """ Exposes a login page. """
         if 'loggedIn' in cherrypy.session:
             raise cherrypy.HTTPRedirect("/interview")
 
-        tmpl = env.get_template('interview_login.html')
+        tmpl = ENV.get_template('interview_login.html')
         return tmpl.render()
 
     @cherrypy.expose(alias='doInterviewLogin')
     def do_interview_login(self, username, password):
+        """ Handles submitted form after logging in.        
+        
+        Keyword arguments:
+        username -- username
+        password -- password
+        """
         db.check_interview_credentials(username, password)
         if not db.check_interview_credentials(username, password):
             raise cherrypy.HTTPRedirect("/")
@@ -59,24 +66,40 @@ class Index(object):
 
     @cherrypy.expose()
     def interview(self):
+        """ Exposes interview page. """
         self.verify_session()
-        tmpl = env.get_template('interview_home.html')
+        tmpl = ENV.get_template('interview_home.html')
         exercise_list = db.get_exercises()
         data = db.get_interviews(self.get_id())
         selected_exercises = db.get_interview_exercise_ids(self.get_id())
         if len(selected_exercises) > 0:
-            return tmpl.render(full_name=data.full_name, username=data.username, exercises=exercise_list, selected_exercises=selected_exercises)
+            return tmpl.render(full_name=data.full_name,
+                               username=data.username,
+                               exercises=exercise_list,
+                               selected_exercises=selected_exercises)
         return tmpl.render(full_name=data.full_name, username=data.username)
 
     @cherrypy.expose()
     def submit(self, ex_id):
+        """ Exposes submit page.
+        
+        Keyword arguments:
+        ex_id -- id of exercise to submit
+        """
         self.verify_session()
-        tmpl = env.get_template('interview_submit.html')
+        tmpl = ENV.get_template('interview_submit.html')
         data = db.get_interviews(self.get_id())
         return tmpl.render(full_name=data.full_name, exercise_id=ex_id)
 
     @cherrypy.expose(alias='submitExercise')
     def submit_exercise(self, exercise_id, script):
+        """
+        Exposes submit exercise page.
+        
+        Keyword arguments:
+        exercise_id -- id of exercise
+        script -- script to submit
+        """
         self.verify_session()
         interview = db.get_interviews(self.get_id())
         exercise = db.get_exercises(exercise_id)
@@ -86,30 +109,43 @@ class Index(object):
             correct = "Correct"
         else:
             correct = "Not correct"
-        tmpl = env.get_template('interview_submit_result.html')
-        return tmpl.render(full_name=data.full_name, correct=correct, used_time=result['execution_time'], used_mem=result['memory_usage'], output=nl2br(result['output']), expected_output=nl2br(result['expected_output']))
+        tmpl = ENV.get_template('interview_submit_result.html')
+        return tmpl.render(full_name=data.full_name,
+                           correct=correct,
+                           used_time=result['execution_time'],
+                           used_mem=result['memory_usage'],
+                           output=nl2br(result['output']),
+                           expected_output=nl2br(result['expected_output']))
 
     def verify_session(self):
+        """ Verifies user sessions. If user is not logged in, performs redirect. """
         if 'loggedIn' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/")
 
     def get_id(self):
+        """ Gets user id from session. """
         return cherrypy.session['user_id']
 
 class AdminIndex(object):
-    """Admin pages.
-    """
+    """ Admin pages. """
 
     @cherrypy.expose()
     def index(self):
+        """ Exposes login page. """
         if 'loggedInAdmin' in cherrypy.session:
             raise cherrypy.HTTPRedirect("/admin/console")
 
-        tmpl = env.get_template('admin_login.html')
+        tmpl = ENV.get_template('admin_login.html')
         return tmpl.render()
 
     @cherrypy.expose(alias='doAdminLogin')
     def do_admin_login(self, username, password):
+        """ Handles submitted form after logging in.        
+        
+        Keyword arguments:
+        username -- username
+        password -- password
+        """ 
         if username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
             raise cherrypy.HTTPRedirect("/admin")
 
@@ -118,16 +154,22 @@ class AdminIndex(object):
 
     @cherrypy.expose()
     def console(self):
+        """ Exposes admin console page. """
         self.verify_session()
         exercise_list = db.get_exercises()
         interview_list = db.get_interviews()
-        tmpl = env.get_template('admin_console.html')
+        tmpl = ENV.get_template('admin_console.html')
         return tmpl.render(exercises=exercise_list, interviews=interview_list)
 
     @cherrypy.expose()
     def info_exercise(self, exercise_id=None):
+        """ Exposes page with information about exercise.
+        
+        Keyword arguments:
+        exercise_id -- id of exercise to show info about
+        """
         self.verify_session()
-        tmpl = env.get_template('admin_info_exercise.html')
+        tmpl = ENV.get_template('admin_info_exercise.html')
         if exercise_id:
             solutions = db.get_solutions(exercise_id=exercise_id)
             data = db.get_exercises(exercise_id)
@@ -137,66 +179,128 @@ class AdminIndex(object):
                 correct_percent = "No submitted solutions"
             else:
                 correct_percent = corrects / submits * 100.0
-            return tmpl.render(friendly_name=data.friendly_name, description=data.description, output=data.expected_output, time_limit=data.time_limit, exercise_id=data.id,
-                               correct_percent=correct_percent, submits=submits)
+            return tmpl.render(friendly_name=data.friendly_name,
+                               description=data.description,
+                               output=data.expected_output,
+                               time_limit=data.time_limit,
+                               exercise_id=data.id,
+                               correct_percent=correct_percent,
+                               submits=submits)
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose()
     def edit_exercise(self, exercise_id=None):
+        """ Exposes page for editing exervice or creating new one if exercise_id is None.
+        
+        Keyword arguments:
+        exercise_id -- id of exercise to edit
+        """
         self.verify_session()
-        tmpl = env.get_template('admin_edit_exercise.html')
+        tmpl = ENV.get_template('admin_edit_exercise.html')
         if exercise_id:
             data = db.get_exercises(exercise_id)
-            return tmpl.render(friendly_name=data.friendly_name, description=data.description, output=data.expected_output, time_limit=data.time_limit, exercise_id=data.id)
+            return tmpl.render(friendly_name=data.friendly_name,
+                               description=data.description,
+                               output=data.expected_output,
+                               time_limit=data.time_limit,
+                               exercise_id=data.id)
         return tmpl.render()
 
     @cherrypy.expose()
     def delete_exercise(self, exercise_id=None):
+        """ Exposes url for deleting exercises.
+        
+        Keyword arguments:
+        exercise_id -- id of exercise to delete
+        """
         self.verify_session()
         if exercise_id:
             db.delete_exercise(exercise_id)
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose(alias='doEditExercise')
-    def do_edit_exercise(self, exercise_id, friendly_name, description, output, time_limit):
+    def do_edit_exercise(self, exercise_id, friendly_name, description, output,
+                         time_limit):
+        """ Handles and edit or create action.
+        
+        Keyword arguments:
+        exercise_id -- id of exercise to edit
+        friendly_name -- user friendly name of exercise
+        description -- description of exercise
+        output -- expected script output
+        time_limit -- time limit for exercise in minutes
+        """
         self.verify_session()
         success = True
         if exercise_id:
-            success = db.edit_exercise(exercise_id, friendly_name, description, output, time_limit)
+            success = db.edit_exercise(exercise_id, friendly_name, description,
+                                       output, time_limit)
         else:
-            success = db.create_exercise(friendly_name, description, output, time_limit)
+            success = db.create_exercise(friendly_name, description, output,
+                                         time_limit)
 
         if success:
             raise cherrypy.HTTPRedirect("/admin/console")
         else:
-            raise cherrypy.HTTPRedirect("/admin/edit_exercise?exercise_id="+exercise_id)
+            raise cherrypy.HTTPRedirect("/admin/edit_exercise?exercise_id="+
+                                        exercise_id)
 
     @cherrypy.expose()
     def edit_interview(self, interview_id=None):
+        """ Exposes a page for editing or creating new interview.
+        
+        Keyword arguments:
+        interview_id -- interview to edit
+        """
         self.verify_session()
-        tmpl = env.get_template('admin_edit_interview.html')
+        tmpl = ENV.get_template('admin_edit_interview.html')
         exercise_list = db.get_exercises()
         if interview_id:
             data = db.get_interviews(interview_id)
             selected_exercises = db.get_interview_exercise_ids(interview_id)
-            return tmpl.render(full_name=data.full_name, username=data.username, password=data.password, exercises=exercise_list, selected_exercises=selected_exercises, interview_id=data.id)
+            return tmpl.render(full_name=data.full_name,
+                               username=data.username,
+                               password=data.password,
+                               exercises=exercise_list,
+                               selected_exercises=selected_exercises,
+                               interview_id=data.id)
         return tmpl.render(exercises=exercise_list)
 
     @cherrypy.expose()
     def delete_interview(self, interview_id=None):
+        """ Exposes url for deleting interviews.
+        
+        Keyword arguments:
+        interview_id -- id of interview to delete
+        """
         self.verify_session()
         if interview_id:
             db.delete_interview(interview_id)
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose(alias='doEditInterview')
-    def do_edit_interview(self, interview_id, full_name, username, password, exercise_ids=[]):
+    def do_edit_interview(self, interview_id, full_name, username, password,
+                          exercise_ids=None):
+        """ Handles form action for editing/creating  new interview.
+        
+        Keyword arguments:
+        interview_id -- interview to edit
+        full_name -- full name of interviewee
+        username -- username for interviewee
+        password -- access password to interview
+        """
         self.verify_session()
+
+        if exercise_ids is None:
+            exercise_ids = []
+
         success = True
         if interview_id:
-            success = db.edit_interview(interview_id, full_name, username, password, exercise_ids)
+            success = db.edit_interview(interview_id, full_name, username,
+                                        password, exercise_ids)
         else:
-            success = db.create_interview(full_name, username, password, exercise_ids)
+            success = db.create_interview(full_name, username, password,
+                                          exercise_ids)
 
         if success:
             raise cherrypy.HTTPRedirect("/admin/console")
@@ -204,12 +308,12 @@ class AdminIndex(object):
             raise cherrypy.HTTPRedirect("/admin/edit_interview?exercise_id="+id)
 
     def verify_session(self):
+        """ Verifies if admin is logged in. Otherwise forwards to login page. """
         if 'loggedInAdmin' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/admin")
 
 def initialize():
-    """Starts webserver.
-    """
+    """ Starts webserver. """
     index = Index()
     index.admin = AdminIndex()
     cherrypy.config.update({'server.socket_host': '0.0.0.0',

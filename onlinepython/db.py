@@ -210,7 +210,7 @@ def get_interviews(interview_id=None):
         return Interview.get((Interview.id == interview_id) &
                             (Interview.deleted == False))
 
-def create_interview(full_name="", username="", password="", exercise_ids=[]):
+def create_interview(full_name="", username="", password="", exercise_ids=None):
     """Creates interview.
 
     Keyword arguments:
@@ -222,6 +222,9 @@ def create_interview(full_name="", username="", password="", exercise_ids=[]):
     Return values:
     True if successful, False otherwise
     """
+    if exercise_ids is None:
+        exercise_ids = []
+
     try:
         with DB.transaction():
             interview = Interview.create(full_name=full_name,
@@ -237,7 +240,7 @@ def create_interview(full_name="", username="", password="", exercise_ids=[]):
         return False
 
 def edit_interview(interview_id=None, full_name="", username="", password="",
-                   exercise_ids=[]):
+                   exercise_ids=None):
     """Edits interview.
 
     Keyword arguments:
@@ -252,6 +255,9 @@ def edit_interview(interview_id=None, full_name="", username="", password="",
     """
     if interview_id == None:
         return False
+
+    if exercise_ids is None:
+        exercise_ids = []
 
     try:
         with DB.transaction():
