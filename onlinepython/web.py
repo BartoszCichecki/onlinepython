@@ -118,7 +118,9 @@ class Index(object):
                            expected_output=nl2br(result['expected_output']))
 
     def verify_session(self):
-        """ Verifies user sessions. If user is not logged in, performs redirect. """
+        """ Verifies user sessions. If user is not logged in,
+        performs redirect.
+        """
         if 'loggedIn' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/")
 
@@ -190,7 +192,8 @@ class AdminIndex(object):
 
     @cherrypy.expose()
     def edit_exercise(self, exercise_id=None):
-        """ Exposes page for editing exervice or creating new one if exercise_id is None.
+        """ Exposes page for editing exervice or creating new one,
+        if exercise_id is None.
         
         Keyword arguments:
         exercise_id -- id of exercise to edit
