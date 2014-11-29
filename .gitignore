@@ -56,7 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 
-pypy-runner/pypy_config.py
-pypy-runner/pypy_config.py
-pypy-runner/pypy_config.py
 *.spyderproject
+Thumbs.db
+pypy-2.4.0-win32/

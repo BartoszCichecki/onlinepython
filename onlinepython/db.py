@@ -8,6 +8,7 @@ Created on Sun Oct  5 19:11:58 2014
 #Python modules
 from peewee import IntegrityError
 import matplotlib
+# Needed for command line usage if no X available (in linux)
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -47,12 +48,21 @@ def add_solution(solution):
 
     all_exercises = set([solution.exercise.id for solution in solutions])
 
+    # Loop through all exercises and create plots
     for exercise_id in all_exercises:
         mem_usage = [solution.memory_usage/megabyte for solution in solutions
                 if solution.exercise.id == exercise_id]
+        time_usage = [solution.execution_time for solution in solutions
+                if solution.exercise.id == exercise_id]
+        # Memory usage plots
         xbins = min(len(mem_usage), 20)
         plt.hist(mem_usage, bins=xbins, color='blue')
-        plt.savefig("public/plot/plot_"+str(exercise_id)+".png")
+        plt.savefig("public/plot/plot_mem_"+str(exercise_id)+".png")
+        plt.close()
+        # Time usage plots
+        xbins = min(len(time_usage), 20)
+        plt.hist(time_usage, bins=xbins, color='blue')
+        plt.savefig("public/plot/plot_time_"+str(exercise_id)+".png")
         plt.close()
 
 def get_solutions(exercise_id=None, solution_id=None):
