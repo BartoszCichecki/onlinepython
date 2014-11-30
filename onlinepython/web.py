@@ -201,6 +201,32 @@ class AdminIndex(object):
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose()
+    def info_exercise_solutions(self, corrects=1, exercise_id=None):
+        """ Exposes page with information about exercise.
+
+        Keyword arguments:
+        corrects -- 1 for show only correct solutions, 0 for all
+        exercise_id -- id of exercise to show solutions about
+        """
+        self.verify_session()
+        tmpl = ENV.get_template('admin_info_exercise_solutions.html')
+        if exercise_id:
+            solutions = db.get_solutions(exercise_id=exercise_id)
+            data = db.get_exercises(exercise_id)
+            if corrects == 1:
+                solutions = [solution for solution in solutions
+                                if solution.correct == True]
+            for solution in solutions:
+                solution.submitted_code = nl2br(solution.submitted_code)
+            return tmpl.render(friendly_name=data.friendly_name,
+                               description=data.description,
+                               output=data.expected_output,
+                               time_limit=data.time_limit,
+                               exercise_id=data.id,
+                               solutions=solutions)
+        raise cherrypy.HTTPRedirect("/admin/console")
+
+    @cherrypy.expose()
     def edit_exercise(self, exercise_id=None):
         """ Exposes page for editing exervice or creating new one,
         if exercise_id is None.

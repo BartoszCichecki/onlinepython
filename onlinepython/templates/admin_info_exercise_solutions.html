@@ -8,7 +8,7 @@
 	<div class="container">
 		<span class="home"><a href="/admin">Home</a>
 		<div class="header">
-		  <h1>Welcome to Online Python - Exercise info</h1>
+		  <h1>Welcome to Online Python - Exercise solutions</h1>
 		</div>
 		<div class="content">
 			<table>
@@ -28,32 +28,16 @@
 				  {{ submits }}
 				</td>
 			  </tr>
-			  <tr>
-				<td>
-				  Correct submits:
-				</td>
-				<td>
-				  {{ correct_percent }}%
-				</td>
-			  </tr>
-			  <tr>
-				<td>
-				  Memory usage:
-				</td>
-				<td>
-				  <img src="/static/plot/plot_mem_{{ exercise_id }}.png" />
-				</td>
-			  </tr>
-			  <tr>
-				<td>
-				  Time usage:
-				</td>
-				<td>
-				  <img src="/static/plot/plot_time_{{ exercise_id }}.png" />
-				</td>
-			  </tr>
 			</table>
 		</div>
+		{% for solution in solutions %}
+			<div class="solution">
+				User:
+				<div class="code">
+					<pre>{{ solution.submitted_code }}</pre>
+				</div>
+			</div>
+		{% endfor %}
 		<div class="footer">
 			<a href="/admin/logout">Logout</a>
 		</div>
