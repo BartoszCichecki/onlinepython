@@ -92,8 +92,11 @@ class Index(object):
         """
         self.verify_session()
         tmpl = ENV.get_template('interview_submit.html')
-        data = db.get_interviews(self.get_id())
-        return tmpl.render(full_name=data.full_name, exercise_id=ex_id)
+        exercise = db.get_exercises(ex_id)
+        return tmpl.render(title=exercise.friendly_name,
+                           desc=exercise.description,
+                           time=exercise.time_limit,
+                           exercise_id=ex_id)
 
     @cherrypy.expose(alias='submitExercise')
     def submit_exercise(self, exercise_id, script):
@@ -107,14 +110,15 @@ class Index(object):
         self.verify_session()
         interview = db.get_interviews(self.get_id())
         exercise = db.get_exercises(exercise_id)
-        data = db.get_interviews(self.get_id())
         result = pyrun.run_file(interview, exercise, script)
+
         if result['correct']:
-            correct = "Correct"
+            correct = True
         else:
-            correct = "Not correct"
+            correct = False
+
         tmpl = ENV.get_template('interview_submit_result.html')
-        return tmpl.render(full_name=data.full_name,
+        return tmpl.render(ex_id=exercise_id,
                            correct=correct,
                            used_time=result['execution_time'],
                            used_mem=result['memory_usage'],
@@ -201,7 +205,7 @@ class AdminIndex(object):
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose()
-    def edit_exercise(self, exercise_id=None):
+    def edit_exercise(self, exercise_id=None, new=None):
         """ Exposes page for editing exervice or creating new one,
         if exercise_id is None.
 

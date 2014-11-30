@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Online Python - Home</title>
+    <title>Online Python</title>
     <link href="/static/style.css" rel="stylesheet" />
   </head>
   <body>
 	<div class="container">
 		<div class="header">
-		  <h1>Welcome to Online Python {{ full_name }}</h1>
+		  <h1>Welcome to Online Python</h1>
 		</div>
 		<div class="content">
+                 <p>Hello {{ full_name }}!</p>
+                 <p>Below you can find list of exercises that you should perform. When you open an exercise you will see a detailed description of what you have to do.</p>
 			<table class="exercisetable">
 				<tr>
 					<th id="firstrow">
@@ -29,14 +31,17 @@
 					{% for exercise in exercises %}
 						<tr>
 							{% if exercise.id in selected_exercises %}
-								<td>
-									<a href="/submit?ex_id={{ exercise.id }}">{{ exercise.friendly_name }}</a>
-								</td>
 								{% if exercise.id in correct_exercises %}
+								      <td>
+									     {{ exercise.friendly_name }}
+								      </td>
 									<td>
 										Yes
 									</td>
 								{% else %}
+                                                   <td>
+									     <a href="/submit?ex_id={{ exercise.id }}">{{ exercise.friendly_name }}</a>
+								      </td>
 									<td>
 										No
 									</td>

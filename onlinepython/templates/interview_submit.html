@@ -7,29 +7,20 @@
   <body>
 	<div class="container">
 		<div class="header">
-		  <h1>Submit your solution - {{ full_name }}</h1>
+		  <h1>Submit your solution</h1>
 		</div>
 		<div class="content">
-		  <form id="submitExercise" action="submitExercise" method="post">
-			<table>
-			  <tr>
-				<td>
-				  <label for="script">Script:</label>
-				</td>
-				<td>
-				  <textarea type="text" name="script" id="script" style="width: 400px; height: 150px"></textarea>
-				</td>
-			  </tr>
-			  <tr>
-				<td colspan="2">
-				<input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
-				<button type="submit">Submit exercise</button></td>
-			  </tr>
-			</table>
-		  </form>
+              <h3>{{ title }}</h3>
+              <p>{{ desc }}</p>
+              <p>You should be able to do this exercise in less than {{ time }} minutes.</p>
+		   <form id="submitExercise" action="submitExercise" method="post">
+			<textarea type="text" name="script" id="script" style="width: 400px; height: 150px"></textarea><br />
+			<input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
+			<button type="submit">Submit exercise</button></td>
+		   </form>
 		</div>
 		<div class="footer">
-			<a href="/logout">Logout</a>
+               <a href="/interview">Back to list of exercises</a>
 		</div>
 	</div>
   </body>

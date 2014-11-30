@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Online Python - Home</title>
+    <title>Online Python - Submission results</title>
     <link href="/static/style.css" rel="stylesheet" />
   </head>
   <body>
 	<div class="container">
 		<div class="header">
-		  <h1>Welcome to Online Python {{ full_name }}</h1>
+		  <h1>Submission results</h1>
 		</div>
 		<div class="content">
 			<table>
@@ -16,7 +16,11 @@
 						Result for output:
 					</td>
 					<td>
-						{{ correct }}
+                                  {% if correct %}
+                                       <div style="color: green">Correct</div>
+                                  {% else %}
+                                       <div style="color: red">Incorrect</div>
+                                  {% endif %}
 					</td>
 				</tr>
 				<tr>
@@ -40,12 +44,12 @@
 						Your script output:
 					</td>
 					<td>
-						Expected output:
+						{{ output }}
 					</td>
 				</tr>
 				<tr>
 					<td>
-						{{ output }}
+						Expected output:
 					</td>
 					<td>
 						{{ expected_output }}
@@ -54,7 +58,10 @@
 			</table>
 		</div>
 		<div class="footer">
-			<a href="/logout">Logout</a>
+               {% if not correct %}
+                    <a href="/submit?ex_id={{ exercise.id }}">Try again</a>
+               {% endif %}
+               <a href="/interview">Back to list of exercises</a>
 		</div>
 	</div>
   </body>
