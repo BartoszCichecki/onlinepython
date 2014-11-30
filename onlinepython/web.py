@@ -38,7 +38,7 @@ def nl2br(text):
 
 class Index(object):
     """ User pages. """
-    
+
     @cherrypy.expose()
     def index(self):
         """ Exposes a login page. """
@@ -50,8 +50,8 @@ class Index(object):
 
     @cherrypy.expose(alias='doInterviewLogin')
     def do_interview_login(self, username, password):
-        """ Handles submitted form after logging in.        
-        
+        """ Handles submitted form after logging in.
+
         Keyword arguments:
         username -- username
         password -- password
@@ -72,17 +72,21 @@ class Index(object):
         exercise_list = db.get_exercises()
         data = db.get_interviews(self.get_id())
         selected_exercises = db.get_interview_exercise_ids(self.get_id())
+        correct_exercises = [exercise.id for exercise in exercise_list
+                        if db.has_correct_solution(exercise_id=exercise.id,
+                                                   interview_id=self.get_id())]
         if len(selected_exercises) > 0:
             return tmpl.render(full_name=data.full_name,
                                username=data.username,
                                exercises=exercise_list,
-                               selected_exercises=selected_exercises)
+                               selected_exercises=selected_exercises,
+                               correct_exercises=correct_exercises)
         return tmpl.render(full_name=data.full_name, username=data.username)
 
     @cherrypy.expose()
     def submit(self, ex_id):
         """ Exposes submit page.
-        
+
         Keyword arguments:
         ex_id -- id of exercise to submit
         """
@@ -95,7 +99,7 @@ class Index(object):
     def submit_exercise(self, exercise_id, script):
         """
         Exposes submit exercise page.
-        
+
         Keyword arguments:
         exercise_id -- id of exercise
         script -- script to submit
@@ -128,6 +132,12 @@ class Index(object):
         """ Gets user id from session. """
         return cherrypy.session['user_id']
 
+    @cherrypy.expose()
+    def logout(self):
+        """ Exposes a logout page. """
+        cherrypy.session.clear()
+        raise cherrypy.HTTPRedirect("/")
+
 class AdminIndex(object):
     """ Admin pages. """
 
@@ -142,12 +152,12 @@ class AdminIndex(object):
 
     @cherrypy.expose(alias='doAdminLogin')
     def do_admin_login(self, username, password):
-        """ Handles submitted form after logging in.        
-        
+        """ Handles submitted form after logging in.
+
         Keyword arguments:
         username -- username
         password -- password
-        """ 
+        """
         if username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
             raise cherrypy.HTTPRedirect("/admin")
 
@@ -166,7 +176,7 @@ class AdminIndex(object):
     @cherrypy.expose()
     def info_exercise(self, exercise_id=None):
         """ Exposes page with information about exercise.
-        
+
         Keyword arguments:
         exercise_id -- id of exercise to show info about
         """
@@ -194,7 +204,7 @@ class AdminIndex(object):
     def edit_exercise(self, exercise_id=None):
         """ Exposes page for editing exervice or creating new one,
         if exercise_id is None.
-        
+
         Keyword arguments:
         exercise_id -- id of exercise to edit
         """
@@ -212,7 +222,7 @@ class AdminIndex(object):
     @cherrypy.expose()
     def delete_exercise(self, exercise_id=None):
         """ Exposes url for deleting exercises.
-        
+
         Keyword arguments:
         exercise_id -- id of exercise to delete
         """
@@ -225,7 +235,7 @@ class AdminIndex(object):
     def do_edit_exercise(self, exercise_id, friendly_name, description, output,
                          time_limit):
         """ Handles and edit or create action.
-        
+
         Keyword arguments:
         exercise_id -- id of exercise to edit
         friendly_name -- user friendly name of exercise
@@ -249,9 +259,9 @@ class AdminIndex(object):
                                         exercise_id)
 
     @cherrypy.expose()
-    def edit_interview(self, interview_id=None):
+    def edit_interview(self, interview_id=None, new=None):
         """ Exposes a page for editing or creating new interview.
-        
+
         Keyword arguments:
         interview_id -- interview to edit
         """
@@ -272,7 +282,7 @@ class AdminIndex(object):
     @cherrypy.expose()
     def delete_interview(self, interview_id=None):
         """ Exposes url for deleting interviews.
-        
+
         Keyword arguments:
         interview_id -- id of interview to delete
         """
@@ -285,7 +295,7 @@ class AdminIndex(object):
     def do_edit_interview(self, interview_id, full_name, username, password,
                           exercise_ids=None):
         """ Handles form action for editing/creating  new interview.
-        
+
         Keyword arguments:
         interview_id -- interview to edit
         full_name -- full name of interviewee
@@ -311,9 +321,15 @@ class AdminIndex(object):
             raise cherrypy.HTTPRedirect("/admin/edit_interview?exercise_id="+id)
 
     def verify_session(self):
-        """ Verifies if admin is logged in. Otherwise forwards to login page. """
+        """ Verifies if admin is logged in. Otherwise forwards to login page."""
         if 'loggedInAdmin' not in cherrypy.session:
             raise cherrypy.HTTPRedirect("/admin")
+
+    @cherrypy.expose()
+    def logout(self):
+        """ Exposes a logout page. """
+        cherrypy.session.clear()
+        raise cherrypy.HTTPRedirect("/admin")
 
 def initialize():
     """ Starts webserver. """

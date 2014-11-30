@@ -1,8 +1,48 @@
+.container {
+	background-color: #FAFAFA;
+	padding: 20px;
+	width: 80%;
+	max-width: 1200px;
+	/* height: 100%; */
+	border: #000000 solid;
+	border-width: 1px 1px 1px 1px;
+	border-radius: 10px;
+	box-shadow: 4px 4px 3px #888888;
+}
+
+/* .content {
+	height: 100%;
+} */
+
+.loginbox {
+	width: 400px;
+	/* height: 200px; */
+	margin: 10% auto 0 auto;
+	padding: 20px;
+	background-color: #FAFAFA;
+	border: #000000 1px solid;
+	border-radius: 10px;
+	box-shadow: 4px 4px 3px #888888;
+}
+
+.exercisetable #firstrow {
+	padding-right: 25px;
+}
+
+.footer {
+	margin-top: 25px;
+}
+
 .left {
-	float: left;
-	width: 50%;
+	display: inline-block;
+	vertical-align: top;
+	/* float: left; */
+	width: 40%;
 }
 .right {
-	float: left;
-	width: 50%;
+	display: inline-block;
+	vertical-align: top;
+	/* margin-left: 100px; */
+	/* float: left; */
+	/* width: 40%; */
 }

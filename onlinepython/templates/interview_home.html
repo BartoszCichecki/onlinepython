@@ -5,30 +5,52 @@
     <link href="/static/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="header">
-      <h1>Welcome to Online Python {{ full_name }}</h1>
-    </div>
-    <div class="content">
-		<table>
-			<tr>
-				<td>
-					Exercises for this you:
-				</td>
-				<td>
-					{% if not exercises|exists %}
-						<i>There are no exercises defined.</i>
-					{% else %}
-						{% for exercise in exercises %}
+	<div class="container">
+		<div class="header">
+		  <h1>Welcome to Online Python {{ full_name }}</h1>
+		</div>
+		<div class="content">
+			<table class="exercisetable">
+				<tr>
+					<th id="firstrow">
+						Exercise
+					</th>
+					<th>
+						Correct script submitted
+					</th>
+				</tr>
+				{% if not exercises|exists %}
+					<tr>
+						<td>
+							<i>There are no exercises defined.</i>
+						</td>
+					</tr>
+				{% else %}
+					{% for exercise in exercises %}
+						<tr>
 							{% if exercise.id in selected_exercises %}
-								<a href="/submit?ex_id={{ exercise.id }}">{{ exercise.friendly_name }}</a>
-								<br />
+								<td>
+									<a href="/submit?ex_id={{ exercise.id }}">{{ exercise.friendly_name }}</a>
+								</td>
+								{% if exercise.id in correct_exercises %}
+									<td>
+										Yes
+									</td>
+								{% else %}
+									<td>
+										No
+									</td>
+								{% endif %}
 							{% endif %}
-						{% endfor %}
-					{% endif %}
-				</td>
-			</tr>
-		</table>
-    </div>
-    <div class="footer"></div>
+						</tr>
+					{% endfor %}
+				{% endif %}
+				</tr>
+			</table>
+		</div>
+		<div class="footer">
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
   </body>
 </html>

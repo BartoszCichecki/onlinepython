@@ -5,57 +5,61 @@
     <link href="/static/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="header">
-      <h1>Welcome to Online Python - Admin console</h1>
-    </div>
-    <div class="content">
-      <div class="left">
-        <div class="content-header">
-          <h2>Interviews</h2>
-        </div>
-        <div class="content-body">
-            {% if not interviews|exists %}
-               <i>There are no interviews defined.</i>
-            {% else %}
-              <ul style="list-style: circle">
-                {% for interview in interviews %}
-                <li>
-                  {{ interview.full_name }}
-                    {% if not interview.started %}
-                        <a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
-                        <a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          <br/>
-          <br/>
-          <a href="/admin/edit_interview?new=1">New interview</a>
-        </div>
-      </div>
-      <div class="right">
-        <div class="content-header">
-          <h2>Exercises</h2>
-        </div>
-        <div class="content-body">
-          {% if not exercises|exists %}
-               <i>There are no exercises defined.</i>
-          {% else %}
-              <ul style="list-style: circle">
-                {% for exercise in exercises %}
-                <li>
-                  {{ exercise.friendly_name }} <a href="/admin/info_exercise?exercise_id={{ exercise.id }}">Info</a> <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
-                </li>
-                {% endfor %}
-              </ul>
-          {% endif %}
-          <br />
-          <br />
-          <a href="/admin/edit_exercise?new=1">New exercise</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer"></div>
+	<div class="container">
+		<div class="header">
+		  <h1>Welcome to Online Python - Admin console</h1>
+		</div>
+		<div class="content">
+		  <div class="left">
+			<div class="content-header">
+			  <h2>Interviews</h2>
+			</div>
+			<div class="content-body">
+				{% if not interviews|exists %}
+				   <i>There are no interviews defined.</i>
+				{% else %}
+				  <ul style="list-style: circle">
+					{% for interview in interviews %}
+					<li>
+					  {{ interview.full_name }}
+						{% if not interview.started %}
+							<a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
+							<a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
+						{% endif %}
+					</li>
+					{% endfor %}
+				  </ul>
+				{% endif %}
+			  <br/>
+			  <br/>
+			  <a href="/admin/edit_interview?new=1">New interview</a>
+			</div>
+		  </div>
+		  <div class="right">
+			<div class="content-header">
+			  <h2>Exercises</h2>
+			</div>
+			<div class="content-body">
+			  {% if not exercises|exists %}
+				   <i>There are no exercises defined.</i>
+			  {% else %}
+				  <ul style="list-style: circle">
+					{% for exercise in exercises %}
+					<li>
+					  {{ exercise.friendly_name }} <a href="/admin/info_exercise?exercise_id={{ exercise.id }}">Info</a> <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
+					</li>
+					{% endfor %}
+				  </ul>
+			  {% endif %}
+			  <br />
+			  <br />
+			  <a href="/admin/edit_exercise?new=1">New exercise</a>
+			</div>
+		  </div>
+		</div>
+		<div class="footer">
+			<a href="/admin/logout">Logout</a>
+		</div>
+	</div>
   </body>
 </html>

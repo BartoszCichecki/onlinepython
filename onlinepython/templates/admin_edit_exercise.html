@@ -5,54 +5,58 @@
     <link href="/static/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="header">
-      <h1>Welcome to Online Python - Edit exercise</h1>
-    </div>
-    <div class="content">
-      <form id="editExercise" action="doEditExercise" method="post">
-        <table>
-          <tr>
-            <td>
-              <label for="friendly_name">Name:</label>
-            </td>
-            <td>
-              <input type="text" name="friendly_name" id="friendly_name" value="{{ friendly_name }}" style="width: 400px" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="description">Description:</label>
-            </td>
-            <td>
-              <textarea type="text" name="description" id="description" style="width: 400px; height: 150px">{{ description }}</textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="output">Output:</label>
-            </td>
-            <td>
-              <textarea type="text" name="output" id="output" style="width: 400px; height: 150px">{{ output }}</textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="timeLimit">Time limit:</label>
-            </td>
-            <td>
-            <input type="number" name="timeLimit" id="timeLimit" value="{{ timelimit }}" min="1" style="width: 50px" /> minutes</td>
-          </tr>
-          <tr>
-            <td></td>
-          </tr>
-          <tr>
-            <td colspan="2">
-            <input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
-            <button type="submit">{% if id %} Save changes {% else %} Create exercise {% endif %}</button></td>
-          </tr>
-        </table>
-      </form>
-    </div>
-    <div class="footer"></div>
+	<div class="container">
+		<div class="header">
+		  <h1>Welcome to Online Python - Edit exercise</h1>
+		</div>
+		<div class="content">
+		  <form id="editExercise" action="doEditExercise" method="post">
+			<table>
+			  <tr>
+				<td>
+				  <label for="friendly_name">Name:</label>
+				</td>
+				<td>
+				  <input type="text" name="friendly_name" id="friendly_name" value="{{ friendly_name }}" style="width: 400px" />
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  <label for="description">Description:</label>
+				</td>
+				<td>
+				  <textarea type="text" name="description" id="description" style="width: 400px; height: 150px">{{ description }}</textarea>
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  <label for="output">Output:</label>
+				</td>
+				<td>
+				  <textarea type="text" name="output" id="output" style="width: 400px; height: 150px">{{ output }}</textarea>
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  <label for="timeLimit">Time limit:</label>
+				</td>
+				<td>
+				<input type="number" name="timeLimit" id="timeLimit" value="{{ timelimit }}" min="1" style="width: 50px" /> minutes</td>
+			  </tr>
+			  <tr>
+				<td></td>
+			  </tr>
+			  <tr>
+				<td colspan="2">
+				<input type="hidden" name="exercise_id" id="exercise_id" value="{{ exercise_id }}" /> 
+				<button type="submit">{% if id %} Save changes {% else %} Create exercise {% endif %}</button></td>
+			  </tr>
+			</table>
+		  </form>
+		</div>
+		<div class="footer">
+			<a href="/admin/logout">Logout</a>
+		</div>
+	</div>
   </body>
 </html>
