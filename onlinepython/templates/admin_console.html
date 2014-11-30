@@ -46,7 +46,7 @@
 				  <ul style="list-style: circle">
 					{% for exercise in exercises %}
 					<li>
-					  {{ exercise.friendly_name }} <a href="/admin/info_exercise?exercise_id={{ exercise.id }}">Info</a> <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
+					  {{ exercise.friendly_name }} <a href="/admin/info_exercise?exercise_id={{ exercise.id }}">Info</a> <a href="/admin/info_exercise_solutions?exercise_id={{ exercise.id }}">Submits</a> <a href="/admin/edit_exercise?exercise_id={{ exercise.id }}">Edit</a> <a href="/admin/delete_exercise?exercise_id={{ exercise.id }}">Delete</a>
 					</li>
 					{% endfor %}
 				  </ul>

@@ -33,6 +33,25 @@
 	margin-top: 25px;
 }
 
+.solution {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 5px;
+}
+
+.code {
+	padding: 0;
+	background-color: #FFFFFF;
+	border: #DDDDDD 1px solid;
+}
+
+.solution:not(:first-child) {
+	border-width: 1px 0 0 0;
+	border-style: dotted;
+	border-color: #000000;
+}
+	
+
 .left {
 	display: inline-block;
 	vertical-align: top;
