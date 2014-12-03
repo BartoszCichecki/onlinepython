@@ -25,7 +25,7 @@ class Interview(BaseModel):
     """ Represents a single interview."""
     full_name = TextField(null=False)
     username = CharField(max_length=100, null=False)
-    password = CharField(max_length=10, null=False)
+    password = CharField(max_length=65, null=False)
     started = BooleanField(default=False)
     deleted = BooleanField(default=False)
 

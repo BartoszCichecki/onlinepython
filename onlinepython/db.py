@@ -7,13 +7,11 @@ Created on Sun Oct  5 19:11:58 2014
 
 #Python modules
 from peewee import IntegrityError
-import matplotlib
-# Needed for command line usage if no X available (in linux)
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
 #Own created modules
 from db_model import DB, Interview, Exercise, InterviewExercise, Solution
+import misc
+from misc import hash_password
 
 def initialize():
     """Creates database model.
@@ -33,8 +31,8 @@ def check_interview_credentials(username, password):
     True if found in database, False otherwise
     """
     return Interview.select().where((Interview.username == username) &
-                                    (Interview.password == password) &
-                                    (Interview.deleted == False)).count() > 0
+            (Interview.password == hash_password(password)) &
+            (Interview.deleted == False)).count() > 0
 
 def add_solution(solution):
     """Save solution to database.
@@ -43,33 +41,7 @@ def add_solution(solution):
     solution -- Solution object
     """
     solution.save()
-    solutions = get_solutions()
-    megabyte = 1024*1024*1.0
-
-    all_exercises = set([solution.exercise.id for solution in solutions])
-    
-    font = {'size': 8}
-
-    matplotlib.rc('font', **font)
-
-    # Loop through all exercises and create plots
-    for exercise_id in all_exercises:
-        mem_usage = [solution.memory_usage/megabyte for solution in solutions
-                if solution.exercise.id == exercise_id]
-        time_usage = [solution.execution_time for solution in solutions
-                if solution.exercise.id == exercise_id]
-        # Memory usage plots
-        xbins = min(len(mem_usage), 20)
-        plt.figure(figsize=(2, 2))
-        plt.hist(mem_usage, bins=xbins, color='blue')
-        plt.savefig("public/plot/plot_mem_"+str(exercise_id)+".png")
-        plt.close()
-        # Time usage plots
-        xbins = min(len(time_usage), 20)
-        plt.figure(figsize=(2,2))
-        plt.hist(time_usage, bins=xbins, color='blue')
-        plt.savefig("public/plot/plot_time_"+str(exercise_id)+".png")
-        plt.close()
+    misc.create_plots()
 
 def get_solutions(exercise_id=None, solution_id=None):
     """Gets solutions.
@@ -96,7 +68,7 @@ def get_solutions(exercise_id=None, solution_id=None):
 
 def has_correct_solution(exercise_id=None, interview_id=None):
     """Checks if user has correct solution for exercise.
-    
+
     Keyword arguments:
     exercise_id -- Exercise ID
     interview_id -- Interviewee ID
@@ -104,7 +76,7 @@ def has_correct_solution(exercise_id=None, interview_id=None):
     Return values:
     Boolean
     """
-    
+
     if exercise_id == None or interview_id == None:
         return False
     else:
@@ -259,13 +231,17 @@ def create_interview(full_name="", username="", password="", exercise_ids=None):
     Return values:
     True if successful, False otherwise
     """
+
+    if password == "":
+        return False
+
     if exercise_ids is None:
         exercise_ids = []
 
     try:
         with DB.transaction():
             interview = Interview.create(full_name=full_name,
-                                         username=username, password=password)
+                         username=username, password=hash_password(password))
 
             for exercise_id in exercise_ids:
                 exercise = Exercise.select().where(
@@ -298,8 +274,13 @@ def edit_interview(interview_id=None, full_name="", username="", password="",
 
     try:
         with DB.transaction():
-            query = Interview.update(full_name=full_name, username=username,
-                                     password=password).where(
+            if password == "":
+                query = Interview.update(full_name=full_name,
+                                         username=username).where(
+                                             Interview.id == interview_id)
+            else:
+                query = Interview.update(full_name=full_name, username=username,
+                                     password=hash_password(password)).where(
                                          Interview.id == interview_id)
             query.execute()
 

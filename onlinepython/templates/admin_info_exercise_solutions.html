@@ -3,8 +3,28 @@
   <head>
     <title>Online Python - Admin console</title>
     <link href="/static/style.css" rel="stylesheet" />
+	<!-- Create a simple CodeMirror instance -->
+	<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css">
+	<script src="/static/codemirror/lib/codemirror.js"></script>
+	<script src="/static/codemirror/mode/python/python.js"></script>
+	<script>
+		function editor(id) {
+			CodeMirror.fromTextArea(document.getElementById(id), {
+				lineNumbers: true,
+				tabMode: "indent",
+				theme: "eclipse",
+				mode: "python",
+				readOnly: true
+			});
+		}
+		function loadEditors() {
+			{% for solution in solutions %}
+				editor('editor{{ solution.id }}');
+			{% endfor %}
+		}
+	</script>
   </head>
-  <body>
+  <body onload="loadEditors()">
 	<div class="container">
 		<span class="home"><a href="/admin">Home</a>
 		<div class="header">
@@ -34,7 +54,7 @@
 			<div class="solution">
 				User:
 				<div class="code">
-					<pre>{{ solution.submitted_code }}</pre>
+					<textarea id="editor{{ solution.id }}">{{ solution.submitted_code }}</textarea>
 				</div>
 			</div>
 		{% endfor %}

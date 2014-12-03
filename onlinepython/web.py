@@ -12,6 +12,7 @@ import os
 from config import ADMIN_USERNAME, ADMIN_PASSWORD
 from jinja2 import Environment, FileSystemLoader
 import pypy_runner as pyrun
+import misc
 
 #Own created modules
 import jinjafilters
@@ -118,7 +119,7 @@ class Index(object):
             correct = False
 
         tmpl = ENV.get_template('interview_submit_result.html')
-        return tmpl.render(ex_id=exercise_id,
+        return tmpl.render(exercise_id=exercise_id,
                            correct=correct,
                            used_time=result['execution_time'],
                            used_mem=result['memory_usage'],
@@ -193,15 +194,22 @@ class AdminIndex(object):
             corrects = len([x for x in solutions if x.correct == True]) * 1.0
             if submits == 0:
                 correct_percent = "No submitted solutions"
+                return tmpl.render(friendly_name=data.friendly_name,
+                                   description=data.description,
+                                   output=data.expected_output,
+                                   time_limit=data.time_limit,
+                                   exercise_id=data.id,
+                                   correct_percent=correct_percent,
+                                   submits=submits)
             else:
-                correct_percent = corrects / submits * 100.0
-            return tmpl.render(friendly_name=data.friendly_name,
-                               description=data.description,
-                               output=data.expected_output,
-                               time_limit=data.time_limit,
-                               exercise_id=data.id,
-                               correct_percent=correct_percent,
-                               submits=submits)
+                correct_percent = str(corrects / submits * 100.0)+" %"
+                return tmpl.render(friendly_name=data.friendly_name,
+                                   description=data.description,
+                                   output=data.expected_output,
+                                   time_limit=data.time_limit,
+                                   exercise_id=data.id,
+                                   correct_percent=correct_percent,
+                                   submits=submits)
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose()
@@ -221,12 +229,13 @@ class AdminIndex(object):
                 solutions = [solution for solution in solutions
                                 if solution.correct == True]
             for solution in solutions:
-                solution.submitted_code = nl2br(solution.submitted_code)
+                solution.submitted_code = solution.submitted_code
             return tmpl.render(friendly_name=data.friendly_name,
                                description=data.description,
                                output=data.expected_output,
                                time_limit=data.time_limit,
                                exercise_id=data.id,
+                               submits=len(solutions),
                                solutions=solutions)
         raise cherrypy.HTTPRedirect("/admin/console")
 
@@ -349,6 +358,15 @@ class AdminIndex(object):
             raise cherrypy.HTTPRedirect("/admin/console")
         else:
             raise cherrypy.HTTPRedirect("/admin/edit_interview?exercise_id="+id)
+
+    @cherrypy.expose()
+    def update_graphs(self):
+        """ Updates all graphs for exercises.
+        """
+        self.verify_session()
+        misc.create_plots()
+        raise cherrypy.HTTPRedirect("/admin/console")
+
 
     def verify_session(self):
         """ Verifies if admin is logged in. Otherwise forwards to login page."""
