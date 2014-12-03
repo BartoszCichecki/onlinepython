@@ -3,7 +3,6 @@
   <head>
     <title>Online Python - Admin console</title>
     <link href="/static/style.css" rel="stylesheet" />
-	<!-- Create a simple CodeMirror instance -->
 	<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css">
 	<script src="/static/codemirror/lib/codemirror.js"></script>
 	<script src="/static/codemirror/mode/python/python.js"></script>
@@ -12,14 +11,13 @@
 			CodeMirror.fromTextArea(document.getElementById(id), {
 				lineNumbers: true,
 				tabMode: "indent",
-				theme: "eclipse",
 				mode: "python",
 				readOnly: true
 			});
 		}
 		function loadEditors() {
 			{% for solution in solutions %}
-				editor('editor{{ solution.id }}');
+			editor('editor{{ solution.id }}');
 			{% endfor %}
 		}
 	</script>
