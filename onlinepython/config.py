@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains program configuration constants.
+
 Created on Sun Oct 19 17:41:45 2014
+
 @author: Harri
 """
 

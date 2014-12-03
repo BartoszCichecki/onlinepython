@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains functions that are useful for accessing the database and
+performing operations on data.
+
 Created on Sun Oct  5 19:11:58 2014
 
 @author: Bartosz

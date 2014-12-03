@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains functions that run user's code and save the results.
+
 Created on Wed Oct 15 16:55:02 2014
+
 @author: Harri
 """
 

@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains tests for the system.
+
 Created on Sat Nov 29 21:08:36 2014
 
 @author: Harri

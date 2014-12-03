@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains definition of data structures that
+are represented in database.
+
 Created on Sun Oct  5 20:22:11 2014
 
 @author: Bartosz

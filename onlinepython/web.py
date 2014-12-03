@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+This module is a part fo OnlinePython project created at DTU
+for the course Data Mining Using Python.
+
+This module contains classes that represent users' site and admin's site.
+Methods are exposed via cherrypy.
+
 Created on Sun Oct  5 20:47:49 2014
 
 @author: Bartosz
