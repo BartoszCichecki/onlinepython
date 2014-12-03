@@ -32,7 +32,7 @@ class Interview(BaseModel):
     full_name = TextField(null=False)
     username = CharField(max_length=100, null=False)
     password = CharField(max_length=65, null=False)
-    started = BooleanField(default=False)
+    locked = BooleanField(default=False)
     deleted = BooleanField(default=False)
 
 class Exercise(BaseModel):

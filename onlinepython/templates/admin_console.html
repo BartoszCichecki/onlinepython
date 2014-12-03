@@ -22,10 +22,8 @@
 					{% for interview in interviews %}
 					<li>
 					  {{ interview.full_name }}
-						{% if not interview.started %}
-							<a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
-							<a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
-						{% endif %}
+						<a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
+						<a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
 					</li>
 					{% endfor %}
 				  </ul>

@@ -37,6 +37,14 @@
 							<input type="text" name="password" id="password" value="" style="width: 200px" />
 						</td>
 					</tr>
+                              <tr>
+						<td>
+							<label for="locked">Locked:</label>
+						</td>
+						<td>
+							<input type="checkbox" name="locked" id="locked" {% if locked %} checked="checked" {% endif %} />
+						</td>
+                              </tr>
 					<tr>
 						<td>
 							Exercises for this interview:

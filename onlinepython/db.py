@@ -38,7 +38,7 @@ def check_interview_credentials(username, password):
     """
     return Interview.select().where((Interview.username == username) &
             (Interview.password == hash_password(password)) &
-            (Interview.deleted == False)).count() > 0
+            (Interview.deleted == False) & (Interview.locked == False)).count() > 0
 
 def add_solution(solution):
     """Save solution to database.
@@ -225,13 +225,15 @@ def get_interviews(interview_id=None):
         return Interview.get((Interview.id == interview_id) &
                             (Interview.deleted == False))
 
-def create_interview(full_name="", username="", password="", exercise_ids=None):
+def create_interview(full_name="", username="", password="", locked=False,
+                     exercise_ids=None):
     """Creates interview.
 
     Keyword arguments:
     full_name -- Interviewee's name
     username -- Interviewee's username
     password -- Interviewee's password
+    locked -- if interview is locked
     exerciseIds -- Exercises open for Interviewee
 
     Return values:
@@ -247,7 +249,8 @@ def create_interview(full_name="", username="", password="", exercise_ids=None):
     try:
         with DB.transaction():
             interview = Interview.create(full_name=full_name,
-                         username=username, password=hash_password(password))
+                         username=username, password=hash_password(password),
+                         locked=locked)
 
             for exercise_id in exercise_ids:
                 exercise = Exercise.select().where(
@@ -259,7 +262,7 @@ def create_interview(full_name="", username="", password="", exercise_ids=None):
         return False
 
 def edit_interview(interview_id=None, full_name="", username="", password="",
-                   exercise_ids=None):
+                   locked=False, exercise_ids=None):
     """Edits interview.
 
     Keyword arguments:
@@ -267,6 +270,7 @@ def edit_interview(interview_id=None, full_name="", username="", password="",
     full_name -- Interviewee's name
     username -- Interviewee's username
     password -- Interviewee's password
+    locked -- if interview is locked
     exerciseIds -- Exercises open for Interviewee
 
     Return values:
@@ -282,12 +286,13 @@ def edit_interview(interview_id=None, full_name="", username="", password="",
         with DB.transaction():
             if password == "":
                 query = Interview.update(full_name=full_name,
-                                         username=username).where(
-                                             Interview.id == interview_id)
+                                         username=username, locked=locked
+                                         ).where(Interview.id == interview_id)
             else:
                 query = Interview.update(full_name=full_name, username=username,
-                                     password=hash_password(password)).where(
-                                         Interview.id == interview_id)
+                                     password=hash_password(password),
+                                     locked=locked).where(
+                                     Interview.id == interview_id)
             query.execute()
 
             interview = Interview.select().where(

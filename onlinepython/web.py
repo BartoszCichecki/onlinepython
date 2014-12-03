@@ -146,6 +146,8 @@ class Index(object):
     @cherrypy.expose()
     def logout(self):
         """ Exposes a logout page. """
+        interview = db.get_interviews(cherrypy.session['user_id'])
+        interview.locked = True
         cherrypy.session.clear()
         raise cherrypy.HTTPRedirect("/")
 
@@ -319,6 +321,7 @@ class AdminIndex(object):
             return tmpl.render(full_name=data.full_name,
                                username=data.username,
                                password=data.password,
+                               locked=data.locked,
                                exercises=exercise_list,
                                selected_exercises=selected_exercises,
                                interview_id=data.id)
@@ -338,7 +341,7 @@ class AdminIndex(object):
 
     @cherrypy.expose(alias='doEditInterview')
     def do_edit_interview(self, interview_id, full_name, username, password,
-                          exercise_ids=None):
+                          locked=None, exercise_ids=None):
         """ Handles form action for editing/creating  new interview.
 
         Keyword arguments:
@@ -346,19 +349,23 @@ class AdminIndex(object):
         full_name -- full name of interviewee
         username -- username for interviewee
         password -- access password to interview
+        locked -- if interview should be locked
         """
         self.verify_session()
 
         if exercise_ids is None:
             exercise_ids = []
+            
+        if locked is None:
+            locked = False
 
         success = True
         if interview_id:
             success = db.edit_interview(interview_id, full_name, username,
-                                        password, exercise_ids)
+                                        password, locked, exercise_ids)
         else:
             success = db.create_interview(full_name, username, password,
-                                          exercise_ids)
+                                          locked, exercise_ids)
 
         if success:
             raise cherrypy.HTTPRedirect("/admin/console")
