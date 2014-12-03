@@ -100,6 +100,11 @@ class Index(object):
         self.verify_session()
         tmpl = ENV.get_template('interview_submit.html')
         exercise = db.get_exercises(ex_id)
+
+        if exercise is None:
+            self.logout()
+            return
+
         return tmpl.render(title=exercise.friendly_name,
                            desc=exercise.description,
                            time=exercise.time_limit,
@@ -117,6 +122,11 @@ class Index(object):
         self.verify_session()
         interview = db.get_interviews(self.get_id())
         exercise = db.get_exercises(exercise_id)
+
+        if exercise is None:
+            self.logout()
+            return
+
         result = pyrun.run_file(interview, exercise, script)
 
         if result['correct']:
@@ -355,7 +365,7 @@ class AdminIndex(object):
 
         if exercise_ids is None:
             exercise_ids = []
-            
+
         if locked is None:
             locked = False
 
