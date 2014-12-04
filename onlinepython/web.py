@@ -220,7 +220,8 @@ class AdminIndex(object):
                                    correct_percent=correct_percent,
                                    submits=submits)
             else:
-                correct_percent = str(corrects / submits * 100.0)+" %"
+                corrects_formatted = "{0:.2f}".format(round(corrects / submits * 100.0,2))
+                correct_percent = str(corrects_formatted) + " %"
                 return tmpl.render(friendly_name=data.friendly_name,
                                    description=data.description,
                                    output=data.expected_output,
