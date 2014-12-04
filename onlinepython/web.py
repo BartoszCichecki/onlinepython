@@ -418,7 +418,7 @@ def initialize():
              'tools.sessions.on': True,
              'tools.staticdir.root': os.path.abspath(os.getcwd())
          },
-         '/static': {
+         '/public': {
              'tools.staticdir.on': True,
              'tools.staticdir.dir': './public'
          }
