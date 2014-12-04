@@ -36,6 +36,7 @@
 				  {{ correct_percent }}
 				</td>
 			  </tr>
+                   {% if submits > 0 %}
 			  <tr>
 				<td>
 				  Average memory usage:
@@ -54,7 +55,10 @@
 				  <img src="/public/plot/plot_avg_time_ex_{{ exercise_id }}.png" />
 				</td>
 			  </tr>
+                   {% endif %}
 			</table>
+                 <br />
+                 <a href="/admin/info_exercise?exercise_id={{ exercise_id }}&force=yes">Update graphs</a>
 		</div>
 		<div class="footer">
 			<a href="/admin/logout">Logout</a>

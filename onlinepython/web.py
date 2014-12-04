@@ -197,17 +197,24 @@ class AdminIndex(object):
         return tmpl.render(exercises=exercise_list, interviews=interview_list)
 
     @cherrypy.expose()
-    def info_exercise(self, exercise_id=None):
+    def info_exercise(self, exercise_id=None, force=None):
         """ Exposes page with information about exercise.
 
         Keyword arguments:
         exercise_id -- id of exercise to show info about
+        force -- if graps should be refreshed
         """
         self.verify_session()
+                
         tmpl = ENV.get_template('admin_info_exercise.html')
         if exercise_id:
             solutions = db.get_solutions(exercise_id=exercise_id)
             data = db.get_exercises(exercise_id)
+            
+            if force == "yes":
+                plotter.plot_avg_mem_usage(data,None,None,True)
+                plotter.plot_avg_time_usage(data,None,None,True)
+            
             submits = len([x for x in solutions])
             corrects = len([x for x in solutions if x.correct == True]) * 1.0
             if submits == 0:
@@ -388,7 +395,7 @@ class AdminIndex(object):
         """ Updates all graphs for exercises.
         """
         self.verify_session()
-        plotter.create_all_plots()
+        plotter.create_all_plots(True)
         raise cherrypy.HTTPRedirect("/admin/console")
 
 
