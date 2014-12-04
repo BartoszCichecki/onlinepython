@@ -13,14 +13,14 @@ Created on Sun Oct  5 20:47:49 2014
 
 #Python modules
 import cherrypy
-import db
 import os
-from config import ADMIN_USERNAME, ADMIN_PASSWORD
 from jinja2 import Environment, FileSystemLoader
-import pypy_runner as pyrun
-import misc
 
-#Own created modules
+#Own modules
+import db
+from config import ADMIN_USERNAME, ADMIN_PASSWORD
+import pypy_runner as pyrun
+import plotter
 import jinjafilters
 
 ENV = Environment(loader=FileSystemLoader('templates'))
@@ -388,7 +388,7 @@ class AdminIndex(object):
         """ Updates all graphs for exercises.
         """
         self.verify_session()
-        misc.create_plots()
+        plotter.create_all_plots()
         raise cherrypy.HTTPRedirect("/admin/console")
 
 

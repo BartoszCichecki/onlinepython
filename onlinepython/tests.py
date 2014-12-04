@@ -10,10 +10,13 @@ Created on Sat Nov 29 21:08:36 2014
 @author: Harri
 """
 
+#Python modules
 import os
 import string
 import random
 import unittest
+
+#Own modules
 import db
 import pypy_runner as pyrun
 
