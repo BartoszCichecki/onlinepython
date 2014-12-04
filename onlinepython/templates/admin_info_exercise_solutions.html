@@ -50,9 +50,8 @@
 		</div>
 		{% for solution in solutions %}
 			<div class="solution">
-				User:
 				<div class="code">
-					<textarea id="editor{{ solution.id }}">{{ solution.submitted_code }}</textarea>
+					<textarea id="editor{{ solution.id }}" style="width: 400px; height: 150px">{{ solution.submitted_code }}</textarea>
 				</div>
 			</div>
 		{% endfor %}
