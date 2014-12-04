@@ -50,6 +50,7 @@
 		</div>
 		{% for solution in solutions %}
 			<div class="solution">
+                       User: {{ solution.interview.full_name }}
 				<div class="code">
 					<textarea id="editor{{ solution.id }}" style="width: 400px; height: 150px">{{ solution.submitted_code }}</textarea>
 				</div>
