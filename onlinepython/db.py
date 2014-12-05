@@ -16,7 +16,7 @@ from peewee import IntegrityError
 
 #Own created modules
 from db_model import DB, Interview, Exercise, InterviewExercise, Solution
-import misc
+import plotter
 from misc import hash_password
 
 def initialize():
@@ -48,7 +48,7 @@ def add_solution(solution):
     solution -- Solution object
     """
     solution.save()
-    misc.create_plots()
+    plotter.create_all_plots()
 
 def get_solutions(exercise_id=None, interview_id=None, solution_id=None):
     """Gets solutions.
