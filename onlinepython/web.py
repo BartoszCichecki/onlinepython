@@ -205,16 +205,16 @@ class AdminIndex(object):
         force -- if graps should be refreshed
         """
         self.verify_session()
-                
+
         tmpl = ENV.get_template('admin_info_exercise.html')
         if exercise_id:
             solutions = db.get_solutions(exercise_id=exercise_id)
             data = db.get_exercises(exercise_id)
-            
+
             if force == "yes":
-                plotter.plot_avg_mem_usage(data,None,None,True)
-                plotter.plot_avg_time_usage(data,None,None,True)
-            
+                plotter.plot_avg_mem_usage(data, None, None, True)
+                plotter.plot_avg_time_usage(data, None, None, True)
+
             submits = len([x for x in solutions])
             corrects = len([x for x in solutions if x.correct == True]) * 1.0
             if submits == 0:
@@ -227,7 +227,8 @@ class AdminIndex(object):
                                    correct_percent=correct_percent,
                                    submits=submits)
             else:
-                corrects_formatted = "{0:.2f}".format(round(corrects / submits * 100.0,2))
+                corrects_formatted = "{0:.2f}".format(
+                                     round(corrects / submits * 100.0, 2))
                 correct_percent = str(corrects_formatted) + " %"
                 return tmpl.render(friendly_name=data.friendly_name,
                                    description=data.description,
@@ -354,19 +355,21 @@ class AdminIndex(object):
         force -- if graphs should be refreshed
         """
         self.verify_session()
-        
+
         interview = db.get_interviews(interview_id)
         tmpl = ENV.get_template('admin_info_interview.html')
-        
+
         if interview_id:
             solutions = db.get_solutions(interview_id=interview_id)
             exercises = set([solution.exercise for solution in solutions])
-            
+
             if force == "yes":
                 for exercise in exercises:
-                    plotter.plot_mem_usage(exercise,interview,None,None,True)
-                    plotter.plot_time_usage(exercise,interview,None,None,True)
-            
+                    plotter.plot_mem_usage(exercise, interview, None, None,
+                                           True)
+                    plotter.plot_time_usage(exercise, interview, None, None,
+                                            True)
+
             submits = {}
             corrects = {}
             for exercise in exercises:
@@ -380,15 +383,15 @@ class AdminIndex(object):
                                       if x.correct == True
                                       and x.exercise == exercise]) * 1.0
                     corrects[exercise.id] = "{0:.2f}".format(
-                        round(correct_amounts / submits_count * 100.0,2))
-                
-            
+                        round(correct_amounts / submits_count * 100.0, 2))
+
+
             return tmpl.render(interview=interview,
                                exercises=exercises,
                                solutions=solutions,
                                submits=submits,
                                corrects=corrects)
-            
+
         raise cherrypy.HTTPRedirect("/admin/console")
 
     @cherrypy.expose()

@@ -57,6 +57,14 @@ def create_all_plots(force_update=False):
 
 def plot_avg_mem_usage(exercise, solutions=None, avg_mem_usage=None,
                        force_update=False):
+    """ Plots histograph and line plot for defined exercise of memory usage.
+
+    Keyword arguments:
+    exercise -- exercise for which plots will be created
+    solutions -- list of all solutions
+    avg_mem_usage -- avg memory usage data
+    force_update -- if plots should be updated even if they are present
+    """
     if solutions is None:
         solutions = db.get_solutions()
 
@@ -87,6 +95,17 @@ def plot_avg_mem_usage(exercise, solutions=None, avg_mem_usage=None,
 
 def plot_mem_usage(exercise, interview, solutions=None, avg_mem_usage=None,
                    force_update=False):
+    """ Plots histograph and line plot for defined exercise and interview
+    of memory usage.
+
+    Keyword arguments:
+    exercise -- exercise for which plots will be created
+    interview -- interview for which plots will be created
+    solutions -- list of all solutions
+    avg_mem_usage -- avg memory usage data
+    force_update -- if plots should be updated even if they are present
+    """
+
     if solutions is None:
         solutions = db.get_solutions()
 
@@ -124,6 +143,14 @@ def plot_mem_usage(exercise, interview, solutions=None, avg_mem_usage=None,
 
 def plot_avg_time_usage(exercise, solutions=None, avg_time_usage=None,
                         force_update=False):
+    """ Plots histograph and line plot for defined exercise of time usage.
+
+    Keyword arguments:
+    exercise -- exercise for which plots will be created
+    solutions -- list of all solutions
+    avg_time_usage -- avg time usage data
+    force_update -- if plots should be updated even if they are present
+    """
     if solutions is None:
         solutions = db.get_solutions()
 
@@ -154,6 +181,17 @@ def plot_avg_time_usage(exercise, solutions=None, avg_time_usage=None,
 
 def plot_time_usage(exercise, interview, solutions=None, avg_time_usage=None,
                     force_update=False):
+    """ Plots histograph and line plot for defined exercise and interview
+    of time usage.
+
+    Keyword arguments:
+    exercise -- exercise for which plots will be created
+    interview -- interview for which plots will be created
+    solutions -- list of all solutions
+    avg_time_usage -- avg time usage data
+    force_update -- if plots should be updated even if they are present
+    """
+
     if solutions is None:
         solutions = db.get_solutions()
 
@@ -189,12 +227,31 @@ def plot_time_usage(exercise, interview, solutions=None, avg_time_usage=None,
         plt.close()
 
 def get_avg_mem_usage(exercise, solutions=None):
+    """ Return averagae memory usage data for specified exercise.
+
+    Keyword arguments:
+    exercise -- exercise for which data will be computed
+    solutions --- list of all solutions
+
+    Returns:
+    Memory usage data.
+    """
     if solutions is None:
         solutions = db.get_solutions()
     return [solution.memory_usage/MEGABYTE for solution in solutions
                 if solution.exercise == exercise]
 
 def get_mem_usage(exercise, interview, solutions=None):
+    """ Returns memory usage data for specified exercise and interview.
+
+    Keyword arguments:
+    exercise -- exercise for which data will be computed
+    interview -- interview for which data will be computed
+    solutions --- list of all solutions
+
+    Returns:
+    Memory usage data.
+    """
     if solutions is None:
         solutions = db.get_solutions()
     return [solution.memory_usage/MEGABYTE for solution in solutions
@@ -202,12 +259,31 @@ def get_mem_usage(exercise, interview, solutions=None):
                 and solution.interview == interview]
 
 def get_avg_time_usage(exercise, solutions=None):
+    """ Return average time usage data for specified exercise.
+
+    Keyword arguments:
+    exercise -- exercise for which data will be computed
+    solutions --- list of all solutions
+
+    Returns:
+    Time usage data.
+    """
     if solutions is None:
         solutions = db.get_solutions()
     return [solution.execution_time for solution in solutions
                 if solution.exercise == exercise]
 
 def get_time_usage(exercise, interview, solutions=None):
+    """ Return time usage data for specified exercise.
+
+    Keyword arguments:
+    exercise -- exercise for which data will be computed
+    interview -- interview for which data will be computed
+    solutions --- list of all solutions
+
+    Returns:
+    Time usage data.
+    """
     if solutions is None:
         solutions = db.get_solutions()
     return [solution.execution_time for solution in solutions

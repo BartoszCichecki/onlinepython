@@ -38,7 +38,8 @@ def check_interview_credentials(username, password):
     """
     return Interview.select().where((Interview.username == username) &
             (Interview.password == hash_password(password)) &
-            (Interview.deleted == False) & (Interview.locked == False)).count() > 0
+            (Interview.deleted == False) &
+            (Interview.locked == False)).count() > 0
 
 def add_solution(solution):
     """Save solution to database.
@@ -66,7 +67,7 @@ def get_solutions(exercise_id=None, interview_id=None, solution_id=None):
     elif interview_id != None:
         solutions = Solution.select().where(Solution.interview == interview_id)
         solutions = [solution for solution in solutions
-            if solution.deleted == False]            
+            if solution.deleted == False]
     elif exercise_id != None:
         solutions = Solution.select().where(Solution.exercise == exercise_id)
         solutions = [solution for solution in solutions
