@@ -44,8 +44,9 @@ class TestSequenceFunctions(unittest.TestCase):
 
     def test_credentials_corr(self):
         """ Tests credential checking with correct credentials. """
-        username = "asdasd"
-        password = "asdasd"
+        username = generate_string()
+        password = generate_string()
+        db.create_interview("Test name", username, password)
         self.assertEqual(True, db.check_interview_credentials(username,
                                                               password))
     def test_output_wrong(self):
