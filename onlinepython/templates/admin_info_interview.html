@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Python - Exercise info</title>
+    <link href="/public/style.css" rel="stylesheet" />
+  </head>
+  <body>
+	<div class="container">
+		<span class="home"><a href="/admin">Home</a>
+		<div class="header">
+		  <h1>Welcome to Online Python - Exercise info</h1>
+		</div>
+		<div class="content">
+                 {% for exercise in exercises %}
+			<table>
+			  <tr>
+				<td>
+				  Name:
+				</td>
+				<td>
+				  {{ exercise.friendly_name }}
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  Submits:
+				</td>
+				<td>
+				  {{ submits[exercise.id] }}
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  Correct submits:
+				</td>
+				<td>
+				  {{ corrects[exercise.id] }}
+				</td>
+			  </tr>
+                   {% if submits[exercise.id] > 0 %}
+			  <tr>
+				<td>
+				  Memory usage:
+				</td>
+				<td>
+				  <img src="/public/plot/hist_mem_ex_{{ exercise.id }}_in_{{ interview.id }}.png" />
+				  <img src="/public/plot/plot_mem_ex_{{ exercise.id }}_in_{{ interview.id }}.png" />
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  Time usage:
+				</td>
+				<td>
+				  <img src="/public/plot/hist_time_ex_{{ exercise.id }}_in_{{ interview.id }}.png" />
+				  <img src="/public/plot/plot_time_ex_{{ exercise.id }}_in_{{ interview.id }}.png" />
+				</td>
+			  </tr>
+                   {% endif %}
+			</table>
+                 {% endfor %}
+                 <br />
+                 <a href="/admin/info_interview?interview_id={{ interview.id }}&force=yes">Update graphs</a>
+		</div>
+		<div class="footer">
+			<a href="/admin/logout">Logout</a>
+		</div>
+	</div>
+  </body>
+</html>

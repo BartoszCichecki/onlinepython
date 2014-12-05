@@ -22,6 +22,7 @@
 					{% for interview in interviews %}
 					<li>
 					  {{ interview.full_name }}
+                                  <a href="/admin/info_interview?interview_id={{ interview.id }}">Info</a>
 						<a href="/admin/edit_interview?interview_id={{ interview.id }}">Edit</a>
 						<a href="/admin/delete_interview?interview_id={{ interview.id }}">Delete</a>
 					</li>

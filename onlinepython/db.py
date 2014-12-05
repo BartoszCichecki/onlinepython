@@ -49,11 +49,12 @@ def add_solution(solution):
     solution.save()
     misc.create_plots()
 
-def get_solutions(exercise_id=None, solution_id=None):
+def get_solutions(exercise_id=None, interview_id=None, solution_id=None):
     """Gets solutions.
 
     Keyword arguments:
     exercise_id -- Exercise ID
+    interview_id -- Interview ID
     solution_id -- Solution ID
 
     Return values:
@@ -62,6 +63,10 @@ def get_solutions(exercise_id=None, solution_id=None):
     if solution_id != None:
         solutions = Solution.select().where((Solution.id == solution_id) &
             (Solution.deleted == False))
+    elif interview_id != None:
+        solutions = Solution.select().where(Solution.interview == interview_id)
+        solutions = [solution for solution in solutions
+            if solution.deleted == False]            
     elif exercise_id != None:
         solutions = Solution.select().where(Solution.exercise == exercise_id)
         solutions = [solution for solution in solutions

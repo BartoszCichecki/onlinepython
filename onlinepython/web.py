@@ -346,6 +346,52 @@ class AdminIndex(object):
         return tmpl.render(exercises=exercise_list)
 
     @cherrypy.expose()
+    def info_interview(self, interview_id=None, force=None):
+        """ Exposes page with information about interview.
+
+        Keyword arguments:
+        interview_id -- id of interview to show info about
+        force -- if graphs should be refreshed
+        """
+        self.verify_session()
+        
+        interview = db.get_interviews(interview_id)
+        tmpl = ENV.get_template('admin_info_interview.html')
+        
+        if interview_id:
+            solutions = db.get_solutions(interview_id=interview_id)
+            exercises = set([solution.exercise for solution in solutions])
+            
+            if force == "yes":
+                for exercise in exercises:
+                    plotter.plot_mem_usage(exercise,interview,None,None,True)
+                    plotter.plot_time_usage(exercise,interview,None,None,True)
+            
+            submits = {}
+            corrects = {}
+            for exercise in exercises:
+                submits_count = len([x for x in solutions
+                                    if x.exercise == exercise])
+                submits[exercise.id] = submits_count
+                if submits == 0:
+                    corrects[exercise.id] = "No submitted solutions"
+                else:
+                    correct_amounts = len([x for x in solutions
+                                      if x.correct == True
+                                      and x.exercise == exercise]) * 1.0
+                    corrects[exercise.id] = "{0:.2f}".format(
+                        round(correct_amounts / submits_count * 100.0,2))
+                
+            
+            return tmpl.render(interview=interview,
+                               exercises=exercises,
+                               solutions=solutions,
+                               submits=submits,
+                               corrects=corrects)
+            
+        raise cherrypy.HTTPRedirect("/admin/console")
+
+    @cherrypy.expose()
     def delete_interview(self, interview_id=None):
         """ Exposes url for deleting interviews.
 
